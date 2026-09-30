@@ -1,0 +1,22 @@
+{
+  "name": "php-unit-tests-skills",
+  "displayName": "PHP Unit Test Skills",
+  "description": "Plan and generate PHPUnit / Pest tests for PHP, Laravel and Symfony code. Prints a Given-When-Then case list, writes the tests, lints them and runs them before reporting.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Black Pug Ltd"
+  },
+  "license": "MIT",
+  "keywords": [
+    "php",
+    "phpunit",
+    "pest",
+    "laravel",
+    "symfony",
+    "unit-testing",
+    "test-generation",
+    "mockery"
+  ],
+  "homepage": "https://github.com/gkwelding/php-unit-tests-skills",
+  "repository": "https://github.com/gkwelding/php-unit-tests-skills"
+}

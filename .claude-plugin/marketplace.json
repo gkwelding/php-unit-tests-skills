@@ -1,0 +1,25 @@
+{
+  "name": "blackpug",
+  "description": "Testing skills for PHP projects.",
+  "owner": {
+    "name": "Black Pug Ltd"
+  },
+  "plugins": [
+    {
+      "name": "php-unit-tests-skills",
+      "source": "./",
+      "displayName": "PHP Unit Test Skills",
+      "description": "Plan and generate PHPUnit / Pest tests for PHP, Laravel and Symfony code.",
+      "license": "MIT",
+      "category": "testing",
+      "keywords": [
+        "php",
+        "phpunit",
+        "pest",
+        "laravel",
+        "symfony"
+      ],
+      "repository": "https://github.com/gkwelding/php-unit-tests-skills"
+    }
+  ]
+}
