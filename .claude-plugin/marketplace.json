@@ -29,7 +29,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-upgrade-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Upgrade Skills",
             "description": "Upgrade Laravel (10 to 13), Symfony (6.4 to 8) and PHPUnit / Pest one major at a time: reads composer.lock, plans each step, applies the official breaking changes, uses Rector where it applies, runs the tests after every step and stops with a report when a package blocks.",
@@ -53,7 +53,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-security-review-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Security Review Skills",
             "description": "Security review for PHP, Laravel and Symfony code.",
@@ -77,7 +77,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-static-analysis-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Static Analysis Skills",
             "description": "Fix PHPStan, Larastan and Psalm errors properly and raise a project's analysis level, without ignores, baseline growth or type lies.",
@@ -100,7 +100,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-migration-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Migration Skills",
             "description": "Write and review database schema migrations safely in Laravel and Symfony (Doctrine Migrations): shipped migrations left alone, reversible down(), zero-downtime ordering, large-table DDL, batched backfills, verified against a disposable database.",
@@ -125,7 +125,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-query-performance-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Query Performance Skills",
             "description": "Find and fix database query problems in Laravel (Eloquent) and Symfony (Doctrine ORM) code, above all N+1 queries.",
@@ -149,7 +149,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-queue-review-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Queue Review Skills",
             "description": "Review and write background jobs in Laravel (queues, jobs, listeners, batches, chains) and Symfony Messenger.",
@@ -172,7 +172,7 @@
             "source": {
                 "source": "github",
                 "repo": "gkwelding/php-testability-refactoring-skills",
-                "ref": "v0.1.0"
+                "ref": "v0.1.1"
             },
             "displayName": "PHP Testability Refactoring Skills",
             "description": "Refactor Laravel, Symfony and plain-PHP code to be unit testable without changing behaviour: pin behaviour with characterisation tests, then extract hidden dependencies (facades, statics, new, clock, randomness, I/O) into injected collaborators in small, verified steps.",
