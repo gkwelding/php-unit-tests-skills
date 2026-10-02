@@ -25,6 +25,7 @@ namespace App\Tests\Controller;
 
 use App\Tests\Factory\OrderFactory;
 use App\Tests\Factory\UserFactory;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -34,7 +35,8 @@ final class OrderControllerTest extends WebTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testShow_ownOrder_returns200WithOrder(): void
+    #[Test]
+    public function show_ownOrder_returns200WithOrder(): void
     {
         // Given
         $client = static::createClient();
@@ -90,7 +92,8 @@ Failed validation returns 422 with a problem+json body listing `violations` (unl
 ```php
 use Symfony\Component\Validator\Constraints\Email;
 
-public function testCreate_malformedEmail_returns422(): void
+#[Test]
+public function create_malformedEmail_returns422(): void
 {
     $client = static::createClient();
     $client->loginUser(UserFactory::createOne()->_real());

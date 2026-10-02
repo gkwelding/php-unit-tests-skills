@@ -11,7 +11,8 @@ tags: symfony, messenger, console, events, voters, http-client
 Handlers are plain invokable services. Unit test by calling them:
 
 ```php
-public function testInvoke_paidInvoice_sendsReceipt(): void
+#[Test]
+public function invoke_paidInvoice_sendsReceipt(): void
 {
     // Given
     $mailer = $this->createMock(MailerInterface::class);
@@ -70,7 +71,8 @@ If `zenstruck/messenger-test` is installed, use its `InteractsWithMessenger` ass
 ```php
 use Symfony\Component\Console\Tester\CommandTester;
 
-public function testExecute_dryRun_deletesNothing(): void
+#[Test]
+public function execute_dryRun_deletesNothing(): void
 {
     // Given
     $repository = $this->createMock(InvoiceRepository::class);
@@ -110,7 +112,8 @@ Cover the branch where the listener does nothing (sub-request, wrong route, alre
 ### Voters
 
 ```php
-public function testVote_ownerEditingOwnOrder_grants(): void
+#[Test]
+public function vote_ownerEditingOwnOrder_grants(): void
 {
     $user = $this->user(id: 1);
     $order = $this->orderOwnedBy($user);

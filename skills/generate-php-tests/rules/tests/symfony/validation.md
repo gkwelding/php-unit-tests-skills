@@ -20,7 +20,8 @@ Plain unit test, no kernel, for built-in constraints declared as attributes:
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Validation;
 
-public function testValidate_usernameOneChar_violatesLengthMin(): void
+#[Test]
+public function validate_usernameOneChar_violatesLengthMin(): void
 {
     // Given
     $validator = Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator();
@@ -47,6 +48,7 @@ Boundary coverage follows `general/test-case-generation-strategy.md`: nearest va
 ### Custom Constraint Validators
 
 ```php
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 final class UkPostcodeValidatorTest extends ConstraintValidatorTestCase
@@ -56,14 +58,16 @@ final class UkPostcodeValidatorTest extends ConstraintValidatorTestCase
         return new UkPostcodeValidator();
     }
 
-    public function testValidate_validPostcode_noViolation(): void
+    #[Test]
+    public function validate_validPostcode_noViolation(): void
     {
         $this->validator->validate('WA1 1AA', new UkPostcode());
 
         $this->assertNoViolation();
     }
 
-    public function testValidate_malformedPostcode_raisesInvalidFormat(): void
+    #[Test]
+    public function validate_malformedPostcode_raisesInvalidFormat(): void
     {
         $constraint = new UkPostcode();
 
@@ -75,7 +79,8 @@ final class UkPostcodeValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised();
     }
 
-    public function testValidate_null_noViolation(): void
+    #[Test]
+    public function validate_null_noViolation(): void
     {
         $this->validator->validate(null, new UkPostcode());
 

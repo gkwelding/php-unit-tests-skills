@@ -137,7 +137,7 @@ Use a literal path, not `route('orders.show', $order)` in the expected value (`g
 To stub a service the controller resolves from the container:
 
 ```php
-$this->mock(PaymentGateway::class, function (MockInterface $mock) {
+$this->mock(PaymentGateway::class, function (\Mockery\MockInterface $mock) {
     $mock->expects('charge')->andReturns(ChargeResult::succeeded('ch_123'));
 });
 ```
@@ -150,4 +150,4 @@ For Blade responses: `assertViewIs('orders.show')`, `assertViewHas('order', fn (
 
 ### Inertia / Livewire
 
-Use the project's existing helpers (`assertInertia(fn (Assert $page) => ...)`, `Livewire::test(...)`). Same principles: assert the props or rendered state that matter.
+Use the project's existing helpers (`assertInertia(fn (\Inertia\Testing\AssertableInertia $page) => ...)`, `Livewire::test(...)`). Same principles: assert the props or rendered state that matter.

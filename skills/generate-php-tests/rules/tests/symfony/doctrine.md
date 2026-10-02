@@ -11,7 +11,8 @@ tags: symfony, doctrine, repositories, entities, foundry
 Entities with behaviour (state transitions, invariants, calculated values) get plain unit tests. Build them with `new` or named constructors; don't persist them.
 
 ```php
-public function testShip_paidOrder_setsStatusShipped(): void
+#[Test]
+public function ship_paidOrder_setsStatusShipped(): void
 {
     $order = Order::place('ORD-001', Money::gbp(5000));
     $order->markPaid(new DateTimeImmutable('2024-01-01'));
@@ -34,7 +35,8 @@ final class OrderRepositoryTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testFindOverdue_excludesPaidOrders(): void
+    #[Test]
+    public function findOverdue_excludesPaidOrders(): void
     {
         // Given
         $overdue = OrderFactory::createOne(['dueAt' => new DateTimeImmutable('2024-01-01'), 'paidAt' => null]);

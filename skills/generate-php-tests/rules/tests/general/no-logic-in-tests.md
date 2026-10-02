@@ -51,7 +51,7 @@ $this->assertSame(json_encode($dto), $response->getContent());
 ### Prefer
 
 ```php
-$this->assertContainsOnly('bool', array_column($users, 'active')); // or assert specific records
+$this->assertSame([true, true], array_column($users, 'active')); // or assert specific records
 $this->assertTrue($response->isSuccessful());
 $this->assertSame('Hello, John!', $greeting);
 $this->assertSame(115, $total); // 100 x 1 + 15 tax

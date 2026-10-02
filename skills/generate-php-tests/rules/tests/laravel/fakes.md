@@ -44,7 +44,7 @@ Queue::assertPushed(SendInvoice::class, 1);
 Queue::assertPushedOn('invoices', SendInvoice::class);
 Queue::assertNotPushed(RefundPayment::class);
 Bus::assertChained([ReserveStock::class, ChargeCard::class]);
-Bus::assertBatched(fn (PendingBatch $batch) => $batch->jobs->count() === 3);
+Bus::assertBatched(fn (\Illuminate\Bus\PendingBatch $batch) => $batch->jobs->count() === 3);
 ```
 
 `dispatch()` on a job goes through the bus. `Queue::fake()` catches it only if the job is queued (`ShouldQueue`). A sync job under `Queue::fake()` still runs. Use `Bus::fake()` when in doubt.
@@ -98,6 +98,8 @@ Notification::assertSentOnDemand(OpsAlert::class);
 ### HTTP Client
 
 ```php
+use Illuminate\Http\Client\Request; // not Illuminate\Http\Request
+
 Http::preventStrayRequests();
 Http::fake([
     'api.stripe.com/v1/charges' => Http::response(['id' => 'ch_123', 'status' => 'succeeded'], 200),

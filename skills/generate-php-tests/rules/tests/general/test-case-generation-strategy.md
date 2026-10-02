@@ -12,7 +12,7 @@ Apply strict INCLUDE/EXCLUDE criteria so every code branch is covered and nothin
 
 - Each distinct code branch and outcome (success paths, error handling)
 - Each unique return value or exception the method can produce
-- For HTTP endpoints: separate cases for 400, 401, 403, 404, 422 and any redirect (302/303). Never merge them.
+- For HTTP endpoints: a separate case for each of 400, 401, 403, 404, 422 and redirect (302/303) the endpoint can actually produce. Never merge them, and don't plan one the route, middleware and code can't return.
 - Concrete status codes only
 - **Validation rules**: every independently failing rule, both sides of every declared boundary, and at least one case where all rules pass
 - **Custom rules / constraints** (`Rule` objects, closure rules, custom `Constraint` + validator): a case that triggers the failure
@@ -52,7 +52,7 @@ length 10       -> valid
 length 11       -> invalid
 ```
 
-For Laravel `min:2` on a field without `string`/`numeric`/`array`, check how the value is typed in the request, because Laravel picks size semantics from the other rules. A numeric string without `string` is measured by value, not length.
+Laravel picks the size unit from the other rules on the field: the numeric value when `numeric`, `integer` or `decimal` is present, the count for `array`, kilobytes for `file`, and the string length otherwise. So `min:2` alone rejects `"5"` (length 1) and accepts `"10"`, while `['integer', 'min:2']` rejects `"1"` and accepts `"2"`. Plan the boundaries in the unit the rules actually use.
 
 ### EXCLUDE
 

@@ -54,7 +54,7 @@ PHPUnit's argument order is `($expected, $actual)`. Getting it backwards produce
 
 ### 3. `assertSame` Over `assertEquals`
 
-`assertEquals` compares loosely: `0 == ''` was true before PHP 8, `'1' == 1` is still true, and floats are compared with tolerance only if you ask. Use `assertSame` for scalars and arrays. Use `assertEquals` for value objects where identity doesn't matter, or `assertEqualsWithDelta` for floats that aren't exact.
+`assertEquals` goes through PHPUnit's comparators, which are loose: `assertEquals(1, '1')`, `assertEquals(1.0, 1)` and `assertEquals(['a' => 1], ['a' => '1'])` all pass. Use `assertSame` for scalars and arrays. Use `assertEquals` for value objects where identity doesn't matter, or `assertEqualsWithDelta` for floats that aren't exact.
 
 In Pest, `toBe()` is strict and `toEqual()` is loose. Same rule.
 
