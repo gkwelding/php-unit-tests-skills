@@ -1,7 +1,7 @@
 ---
 name: generate-php-test-cases
 description: "Analyse PHP code (Laravel, Symfony or plain PHP) and list the test cases it needs in Given-When-Then form, WITHOUT writing test code. Use when the user asks what tests a PHP class, controller, job or method needs, wants a test plan or coverage review, asks what's missing from existing PHPUnit/Pest tests, or wants to review cases before generation. For actually writing the tests, use generate-php-tests."
-allowed-tools: Read, Glob, Grep
+allowed-tools: Read, Glob, Grep, Bash(git diff:*), Bash(git status:*)
 ---
 
 # Generate PHP Test Cases
@@ -9,6 +9,8 @@ allowed-tools: Read, Glob, Grep
 Analyse PHP code and list the test cases it needs. This skill outputs case descriptions only. It does not write test code.
 
 **Target to analyse:** $ARGUMENTS
+
+If no target was given (the line above is empty or shows a literal `$ARGUMENTS` placeholder), analyse what changed: PHP files from `git diff --name-only main...HEAD` (use the repo's default branch) plus `git status --porcelain`, excluding `tests/`, `vendor/`, migrations and config. Take them one at a time. If there are none, ask for a target.
 
 ## Quality Standards
 

@@ -7,6 +7,23 @@ tags: php, phpunit, pest, execution, verification
 
 Tests that pass static checks but fail at runtime are not deliverable.
 
+### 0. Where Tests Run
+
+Many Laravel and Symfony projects can't run tests on the host: the database, Redis or the right PHP version live in containers. Find out how the project runs them before the first command:
+
+| Signal | Run commands through |
+|---|---|
+| `vendor/bin/sail` and a `laravel.test` service in `docker-compose.yml` / `compose.yaml` | `vendor/bin/sail test ...` (`php artisan test`), `vendor/bin/sail php vendor/bin/phpunit ...` |
+| `.ddev/` | `ddev exec vendor/bin/phpunit ...` |
+| `.lando.yml` | The tooling command it defines, often `lando php vendor/bin/phpunit ...` |
+| `docker-compose.yml` / `compose.yaml` with a PHP service, no wrapper | `docker compose exec <php service> vendor/bin/phpunit ...` |
+| `Makefile`, `justfile`, `Taskfile.yml` or `composer.json` scripts with a test target | That target if it accepts a path or filter; otherwise its prefix with your own arguments |
+| None of these | The host (`vendor/bin/phpunit`, `php artisan test`, ...) |
+
+The README and CI config usually confirm which applies. Use the same prefix for `php -l`, PHPStan and code style when the host PHP differs from the project's `require.php` or lacks its extensions.
+
+If the containers aren't running, ask before starting them. Don't rebuild images or change compose files.
+
 ### 1. Run Only the New or Changed Tests
 
 | Runner | Command |

@@ -10,6 +10,8 @@ Analyse PHP code and write focused, passing tests for it with PHPUnit or Pest, f
 
 **Target to test:** $ARGUMENTS
 
+If no target was given (the line above is empty or shows a literal `$ARGUMENTS` placeholder), test what changed: PHP files from `git diff --name-only main...HEAD` (use the repo's default branch) plus `git status --porcelain`, excluding `tests/`, `vendor/`, migrations and config. Take them one at a time. If there are none, ask for a target.
+
 ## Quality Standards
 
 - Read the code and the rules properly before writing. Quality over speed.
