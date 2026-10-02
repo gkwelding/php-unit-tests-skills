@@ -24,7 +24,7 @@ Higher MSI with no failures and few skips is better. A skipped test with a reaso
 |---|---|
 | Laravel `DiscountCalculator` | Tier thresholds and the zero boundary, half-up rounding (both directions), per-tier caps, blank / padded / lower-case coupons, unknown-coupon exception, and a date-window coupon whose exact first and last second only a frozen clock can test. A thorough suite scores 100%; one that tests the window mid-season and skips the edges scores about 86% |
 | Laravel `CustomerController` + `StoreCustomerRequest` | JSON 401, 403 from `authorize()` (UserFactory's default `email_verified_at` is a trap), one case per rule and boundary, `boolean()` |
-| Symfony `ShippingCostCalculator` | Weight bands, per-kilo arithmetic, country and express branches |
+| Symfony `ShippingCostCalculator` | Weight-band and per-started-kilo boundaries, blank / padded / lower-case country codes, a free-shipping threshold with two independent conditions, and an express fee that changes at 14:00 UK time read from an injected `ClockInterface` (so the test needs `MockClock`, and BST vs UTC matters). A thorough suite scores 100%; one that tests mid-band weights and mid-morning / afternoon times scores about 82% |
 | Symfony `OrderController` + `CreateOrderDto` | `#[MapRequestPayload]` 422 by constraint code, 400 malformed JSON, `Range` and `Length` boundaries |
 
 Add a target by dropping its files under `fixtures/<framework>/` (paths mirror the app) and adding a line to `targets` in `run.sh`.

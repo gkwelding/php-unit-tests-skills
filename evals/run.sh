@@ -48,7 +48,7 @@ scaffold() {
         symfony)
             composer create-project -n --quiet symfony/skeleton "$dir"
             (cd "$dir" && composer config allow-plugins.infection/extension-installer true \
-                && composer require -n --quiet symfony/serializer symfony/property-access symfony/property-info symfony/validator \
+                && composer require -n --quiet symfony/clock symfony/serializer symfony/property-access symfony/property-info symfony/validator \
                 && composer require -n --quiet --dev symfony/test-pack infection/infection)
             cp -r "$root/evals/fixtures/symfony/." "$dir/"
             src=src ;;
