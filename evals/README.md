@@ -73,7 +73,7 @@ On Windows, run it from Git Bash. The script passes prompts to `claude -p` on st
 
 Every `claude -p` call runs with `--setting-sources project`, so your user-level plugins, hooks and settings don't load in either variant. Without it, anything your own setup injects (a plugin's session-start instructions, say) applies to both variants and skews the comparison.
 
-Current `laravel/laravel` skeletons ship a `CLAUDE.md`/`AGENTS.md` for Laravel Boost. It applies to both variants equally; leave it, or delete it in `evals/.work/laravel` and recommit the baseline if you want the skills measured on their own.
+Current `laravel/laravel` skeletons ship a `CLAUDE.md`/`AGENTS.md` telling agents to install Laravel Boost. The scaffold deletes both: a run that follows them adds about 75 files (Boost's guidelines, MCP config, `composer.json` changes), which swamps the diff, the metrics and the judge. Delete them from an existing `evals/.work/laravel` scaffold and recommit its baseline if it predates this.
 
 The first run scaffolds the apps into `evals/.work/` (gitignored) and reuses them afterwards. Fixture edits are copied in on every run; delete a framework's folder to rebuild it after changing its packages or to pick up newer framework releases. Each run writes `results.csv` plus per-target logs and diffs to `evals/.work/results/<timestamp>/`.
 

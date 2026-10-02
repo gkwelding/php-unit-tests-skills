@@ -43,6 +43,8 @@ scaffold() {
         case $fw in
             laravel)
                 composer create-project -n --quiet laravel/laravel "$dir"
+                # Laravel 13 skeletons ship CLAUDE.md/AGENTS.md telling agents to install Laravel Boost; a run that follows it adds ~75 files and skews the scores.
+                rm -f "$dir/CLAUDE.md" "$dir/AGENTS.md"
                 (cd "$dir" && composer config allow-plugins.infection/extension-installer true \
                     && composer require -n --quiet --dev infection/infection)
                 echo "require __DIR__.'/customers.php';" >> "$dir/routes/web.php" ;;
@@ -52,7 +54,7 @@ scaffold() {
                     && composer require -n --quiet symfony/clock symfony/serializer symfony/property-access symfony/property-info symfony/validator \
                     && composer require -n --quiet --dev symfony/test-pack infection/infection) ;;
         esac
-        (cd "$dir" && git init -q)
+        (cd "$dir" && git init -q && git config core.longpaths true)
     fi
 
     # Copy fixtures and config on every run so edits reach an existing scaffold.
