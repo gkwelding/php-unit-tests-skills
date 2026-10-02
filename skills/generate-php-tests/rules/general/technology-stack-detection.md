@@ -12,7 +12,7 @@ Read `composer.json` (and `composer.lock` for exact versions) before writing any
 | Package | Stack |
 |---|---|
 | `laravel/framework` | Laravel. Check the major: 10, 11, 12 differ in `bootstrap/app.php`, exception handling, and some testing helpers. |
-| `symfony/framework-bundle` | Symfony full-stack. Check the major (6.4 / 7.x). |
+| `symfony/framework-bundle` | Symfony full-stack. Check the major (6.4 / 7.x / 8.x). |
 | `api-platform/core` | API Platform on Symfony or Laravel; its `ApiTestCase` may be available |
 | Neither | Plain PHP / other framework: use `php/phpunit-template.md` and the general rules only |
 

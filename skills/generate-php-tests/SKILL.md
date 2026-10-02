@@ -155,3 +155,4 @@ Paths are relative to `./rules/`. Read the ones that apply before writing.
 | **Symfony** DTO/entity constraints, custom constraint validator | `symfony/validation.md` |
 | **Symfony** entity, repository, service that persists | `symfony/doctrine.md` |
 | **Symfony** Messenger handler/dispatch, console command, event subscriber, voter, HttpClient | `symfony/messenger-console-events.md` |
+| **Symfony** custom authenticator, normalizer/denormalizer, Twig extension | `symfony/authenticators-normalizers-twig.md` |
