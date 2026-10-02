@@ -9,9 +9,9 @@ What every planned case and written test must satisfy. Each section names the PH
 
 ### 1. Given-When-Then
 
-Every test has visible setup, action and verification. Use `// Given` / `// When` / `// Then` unless the project uses `// Arrange` / `// Act` / `// Assert` or no comments, in which case match it.
+Every test has visible setup, action and verification. In tests longer than about three lines, label them `// Given` / `// When` / `// Then`, unless the project uses `// Arrange` / `// Act` / `// Assert` or no comments, in which case match it. Leave the labels out of shorter tests: a blank line between setup and the call is enough, and a label over a one-line arrangement is noise.
 
-Prefix results `$actual...` and expected values `$expected...`. PHPUnit's argument order is `($expected, $actual)`; reversing it produces misleading failure messages.
+Prefix results `$actual...` and expected values `$expected...` when the test stores them in variables. PHPUnit's argument order is `($expected, $actual)`; reversing it produces misleading failure messages. Don't introduce a variable just to carry the prefix: `$this->assertSame(500, $calculator->discountFor(10000));` reads better than storing the result first.
 
 ### 2. Strict Assertions
 
@@ -67,7 +67,9 @@ Each is a separate behaviour and usually a separate test: `test_reset_password_c
 
 **Several assertions for one behaviour are fine.** Assert together the fields whose failure means the outcome in the test name is wrong (email, first and last name for "returns user with submitted identity"). Fields that can be wrong independently (`status`, `createdAt`) get their own tests. Moving a field to its own test still asserts it; leaving it out of every test does not.
 
-**One cause per validation test.** Widening the name (`..._returnsValidationErrors`) doesn't make three failing rules one behaviour. One failing rule per test, every other field valid. Data providers and datasets fit well: each row is reported as its own test. Give rows descriptive keys and keep them literal, with no loops or generated rows.
+**Same steps, different values: use a data provider.** When cases run the same steps and differ only in inputs and the expected value (tiers, bands, both sides of a boundary, each failing rule), write one test with a data provider or Pest dataset, not near-identical methods. Each row is still reported as its own test. Key rows by the case's state and outcome (`'gold at threshold'`), so the case from the plan stays recognisable, and keep rows literal, with no loops or generated rows. Give cases with different setup or a different kind of outcome (a value vs an exception, a response vs a dispatched job) their own tests rather than widening one provider to hold them.
+
+**One cause per validation test.** Widening the name (`..._returnsValidationErrors`) doesn't make three failing rules one behaviour. One failing rule per test, every other field valid; a provider of invalid inputs fits well.
 
 ```php
 #[DataProvider('invalidUsernames')]
