@@ -19,7 +19,8 @@ done
 required=$(printf '"%s",' "${criteria[@]}")
 schema="{\"type\":\"object\",\"properties\":{${props%,}},\"required\":[${required%,}]}"
 
-echo "framework,target,criterion,winner,reason" > judge.csv
+# a_was says which variant was shown as A; the reasons refer to the suites as A and B.
+echo "framework,target,criterion,winner,a_was,reason" > judge.csv
 
 tail -n +2 results.csv | cut -d, -f1,2 | sort -u | while IFS=, read -r fw target; do
     name=$fw-$(basename "$target" .php)
@@ -48,7 +49,7 @@ EOF
         echo "// $target"
         cat "$fixtures/$target"
         # Include the app classes the target imports (Form Request, DTO, model, mail, ...).
-        grep -oE '^use App\\[A-Za-z\\]+;' "$fixtures/$target" | sed -E 's/^use App\\//; s/;$//; s#\\#/#g' |
+        { grep -oE '^use App\\[A-Za-z\\]+;' "$fixtures/$target" || true; } | sed -E 's/^use App\\//; s/;$//; s#\\#/#g' |
             while read -r class; do
                 [ -f "$fixtures/$base/$class.php" ] && { echo; echo "// $base/$class.php"; cat "$fixtures/$base/$class.php"; }
             done
@@ -70,7 +71,7 @@ EOF
         $out = fopen("judge.csv", "a");
         foreach ($verdict as $criterion => $v) {
             $winner = ["A" => $a, "B" => $b][$v["winner"]] ?? "tie";
-            fputcsv($out, [$fw, $target, $criterion, $winner, $v["reason"]], escape: "");
+            fputcsv($out, [$fw, $target, $criterion, $winner, $a, $v["reason"]], escape: "");
         }
     ' "$name.judge.json" "$a" "$b" "$fw" "$target"
 done
