@@ -17,6 +17,8 @@ A **stub** decides what a collaborator returns. It asserts nothing. A **mock** v
 
 Keep stubs loose so the call reaches the code under test. Put the precision in the verification.
 
+Use `createMock()` only when the test calls `expects()` on it. On PHPUnit 12 a mock without expectations raises a notice; don't silence it with `#[AllowMockObjectsWithoutExpectations]`, switch to `createStub()`.
+
 With Mockery, `shouldReceive()` without `->once()`/`->times()` is only a stub; it doesn't fail when the call never happens. Use `expects()` for verification.
 
 ### Capture Complex Arguments, Then Assert

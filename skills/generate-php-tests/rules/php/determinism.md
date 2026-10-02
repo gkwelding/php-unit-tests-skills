@@ -35,6 +35,23 @@ Often you don't need the value at all: assert that the returned ID matches the p
 - `random_int()`, `mt_rand()`, `Str::random()`, `array_rand()` in production code: inject a `Random\Randomizer` (PHP 8.2+) with a seeded engine, or a project `RandomSource` interface. Laravel: `Str::createRandomStringsUsing(fn () => 'fixed')`.
 - If none of those are possible, assert on properties that hold regardless (length, character set), not the value.
 
+### Sleeps and Retry Delays
+
+Code that waits between retries makes tests slow and the delay unassertable. Laravel code using `Illuminate\Support\Sleep` (not PHP's `sleep()`) can be faked:
+
+```php
+Sleep::fake();
+
+$client->fetchWithRetry('/feed'); // retries twice, backing off
+
+Sleep::assertSequence([
+    Sleep::for(1)->second(),
+    Sleep::for(2)->seconds(),
+]);
+```
+
+`Sleep::assertSleptTimes(2)` and `Sleep::assertNeverSlept()` cover simpler cases. The `retry()` helper and `Http::retry()` sleep through `Sleep`, so this covers them too. Raw `sleep()` / `usleep()` can't be faked; note the coupling.
+
 ### Faker in Factories
 
 Faker values are random unless seeded. Never let an assertion depend on an unpinned Faker value (see `general/cleanly-create-test-data.md`). Don't seed Faker globally to make a test pass; pass the value explicitly.

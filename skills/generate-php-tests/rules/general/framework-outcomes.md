@@ -33,6 +33,8 @@ Pick the lowest level that can observe the behaviour. Controllers are always Fea
 
 Check `bootstrap/app.php` / exception handler for overrides before planning.
 
+The web redirect goes to `route('login')`. In an app with no `login` route (API-only, no starter kit) and no `redirectGuestsTo`, an unauthenticated *web* request returns 500 (`RouteNotFoundException`), not 302. API routes are planned as JSON requests, which return 401.
+
 ### Symfony HTTP Outcomes
 
 | Situation | Outcome |

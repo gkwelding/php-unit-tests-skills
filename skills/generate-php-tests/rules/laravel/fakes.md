@@ -1,5 +1,5 @@
 ---
-title: Laravel Fakes (Queue, Bus, Event, Mail, Notification, Http, Storage)
+title: Laravel Fakes (Queue, Bus, Event, Mail, Notification, Http, Storage, Exceptions)
 tags: laravel, fakes, queue, events, mail, notifications, http
 ---
 
@@ -93,6 +93,35 @@ Notification::assertSentTo($user, InvoicePaid::class, function (InvoicePaid $n, 
 Notification::assertNotSentTo($otherUser, InvoicePaid::class);
 Notification::assertSentOnDemand(OpsAlert::class);
 ```
+
+Test the notification's content on the notification itself, without sending it:
+
+```php
+$notification = new InvoicePaid($invoice);
+
+$actualMail = $notification->toMail($user);
+$this->assertSame('Invoice INV-001 paid', $actualMail->subject);
+$this->assertSame('http://localhost/invoices/42', $actualMail->actionUrl); // APP_URL from phpunit.xml
+
+$this->assertSame(['invoice_id' => 42], $notification->toArray($user));
+```
+
+Cover `via()` branches (channels that depend on user preferences) the same way.
+
+### Reported Exceptions (Laravel 11+)
+
+When the code catches an exception and calls `report($e)` instead of rethrowing, the report is the behaviour:
+
+```php
+Exceptions::fake();
+
+// ... act ...
+
+Exceptions::assertReported(fn (StockSyncFailed $e) => $e->sku === 'SKU-1');
+Exceptions::assertNotReported(InvalidOrder::class);
+```
+
+`Exceptions::assertNothingReported()` covers the happy path. On older versions, assert the observable effect instead (log record, fallback value).
 
 ### HTTP Client
 

@@ -150,7 +150,7 @@ Paths are relative to `./rules/`. Read the ones that apply before writing.
 | **Laravel** controller / route / Form Request | `laravel/http-tests.md`, `laravel/fakes.md` |
 | **Laravel** job, listener, Artisan command, scheduled task | `laravel/jobs-commands-listeners.md`, `laravel/fakes.md` |
 | **Laravel** model, scope, cast, query class, repository | `laravel/database.md` |
-| **Laravel** code dispatching jobs/events/mail/notifications/HTTP | `laravel/fakes.md` |
+| **Laravel** code dispatching jobs/events/mail/notifications/HTTP, or reporting exceptions | `laravel/fakes.md` |
 | **Symfony** controller | `symfony/controller-tests.md` |
 | **Symfony** DTO/entity constraints, custom constraint validator | `symfony/validation.md` |
 | **Symfony** entity, repository, service that persists | `symfony/doctrine.md` |

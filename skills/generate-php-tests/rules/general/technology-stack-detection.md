@@ -34,7 +34,7 @@ A project with Pest installed may still have PHPUnit-class tests. Pest runs both
 | 9 | Docblock `@test`, `@dataProvider`, `@covers`. `withConsecutive()` exists. |
 | 10 | Attributes (`#[Test]`, `#[DataProvider]`). Data providers must be `public static`. `withConsecutive()` removed. |
 | 11 | Docblock metadata deprecated. `createStub()` preferred for doubles with no expectations. |
-| 12 | Docblock metadata removed. |
+| 12 | Docblock metadata removed. A `createMock()` double with no `expects()` raises a PHPUnit notice ("No expectations were configured for the mock object"). Use `createStub()` for those. |
 
 ### Mocking Libraries
 
