@@ -2,7 +2,7 @@
   "name": "php-unit-tests-skills",
   "displayName": "PHP Unit Test Skills",
   "description": "Plan and generate PHPUnit / Pest tests for PHP, Laravel and Symfony code. Prints a Given-When-Then case list, writes the tests, lints them and runs them before reporting.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Black Pug Ltd"
   },
