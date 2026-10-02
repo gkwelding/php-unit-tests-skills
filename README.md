@@ -97,6 +97,7 @@ skills/
         ├── symfony/             # controllers, validation, Doctrine, Messenger/console, security/serializer/Twig
         └── post-generation/     # lint/static analysis, execution
 scripts/build-skills.sh          # packages dist/*.skill for claude.ai
+evals/                           # with/without-skill comparison on Laravel and Symfony fixtures
 ```
 
 `rules/general/` exists in both skills so each can be installed alone. CI (`.github/workflows/check-rules.yml`) fails if the copies differ. Check locally with:
@@ -107,7 +108,7 @@ diff -r skills/generate-php-test-cases/rules/general skills/generate-php-tests/r
 
 ## Status
 
-First version. The rules have been checked against the Laravel 12, Symfony 7.3, Mockery 1.6 and Monolog 3 sources for the APIs they name, but haven't yet been run through a benchmark like the upstream project's mutation-testing one. Treat it as a strong starting point and adjust the rules to your own house style.
+First version. The rules have been checked against the Laravel 12, Symfony 7.3/8.1, PHPUnit 12.5, Mockery 1.6 and Monolog 3 sources for the APIs they name. [`evals/`](evals/README.md) compares tests written with and without the skills (pass rate, skips, Infection mutation score) on Laravel and Symfony fixtures; no published results yet. Treat it as a strong starting point and adjust the rules to your own house style.
 
 ## Licence
 
