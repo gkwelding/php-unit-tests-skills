@@ -12,7 +12,7 @@ This is the first decision and the most common mistake.
 | Base class | Boots | Use for |
 |---|---|---|
 | `PHPUnit\Framework\TestCase` | Nothing | Pure unit tests: services, value objects, calculators, handlers with injected collaborators |
-| Laravel `Tests\TestCase` | The Laravel app | Anything touching facades, helpers that need the container (`now()`, `config()`, `app()`, `route()`, `__()`), Eloquent, HTTP, Artisan, fakes |
+| Laravel `Tests\TestCase` | The Laravel app | Anything touching facades, helpers that need the container (`config()`, `app()`, `route()`, `__()`), Eloquent, HTTP, Artisan, fakes, `travelTo()`. (`now()` and the `Date` facade work without the app; freeze them with `Carbon::setTestNow()` in a plain test.) |
 | Symfony `KernelTestCase` | Kernel + container | Services that need real wiring, Doctrine repositories, validator with real constraints, Messenger with test transports |
 | Symfony `WebTestCase` | Kernel + HTTP client | Controllers |
 

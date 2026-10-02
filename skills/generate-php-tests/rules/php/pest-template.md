@@ -16,7 +16,7 @@ pest()->extend(Tests\TestCase::class)->in('Feature');   // Pest 3
 uses(Tests\TestCase::class)->in('Feature');             // Pest 1/2
 ```
 
-Read it. A file in `tests/Unit` may not get the Laravel app: if the SUT calls a facade or a container-backed helper (`now()`, `config()`, `app()`, `route()`, `__()`), it fails with "A facade root has not been set". Put the test in a directory bound to `Tests\TestCase`, or note that the collaborator should be injected. Equally, don't bind a framework base class to code that doesn't need one. Don't add `uses()` to a single file unless neighbours do.
+Read it. A file in `tests/Unit` may not get the Laravel app: if the SUT calls a facade or a container-backed helper (`config()`, `app()`, `route()`, `__()`), it fails with "A facade root has not been set". `now()` and the `Date` facade are the exception: they work without the app, but `travelTo()` needs `Tests\TestCase`, so freeze time with `Carbon::setTestNow()` in a plain test. Put the test in a directory bound to `Tests\TestCase`, or note that the collaborator should be injected. Equally, don't bind a framework base class to code that doesn't need one. Don't add `uses()` to a single file unless neighbours do.
 
 ### Template
 
