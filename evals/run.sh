@@ -2,7 +2,7 @@
 # Generate tests for each fixture target with and without the skills, then score them:
 # tests run, failures, errors, skipped, and Infection's mutation score (MSI) on the target.
 #
-# Usage: evals/run.sh [laravel|symfony|all]
+# Usage: evals/run.sh [all|laravel|symfony|<part of a target path>]   e.g. evals/run.sh Calculator
 # Env:   MODEL       model for claude -p (default: your claude default)
 #        BUDGET_USD  spend cap per claude run (default 5)
 #        WORK        scratch directory for the scaffolded apps (default evals/.work)
@@ -35,27 +35,31 @@ fi
 
 scaffold() {
     local fw=$1 dir=$work/$1 src
-    [ -d "$dir/.git" ] && return
-    rm -rf "$dir"
-    case $fw in
-        laravel)
-            composer create-project -n --quiet laravel/laravel "$dir"
-            (cd "$dir" && composer config allow-plugins.infection/extension-installer true \
-                && composer require -n --quiet --dev infection/infection)
-            cp -r "$root/evals/fixtures/laravel/." "$dir/"
-            echo "require __DIR__.'/customers.php';" >> "$dir/routes/web.php"
-            src=app ;;
-        symfony)
-            composer create-project -n --quiet symfony/skeleton "$dir"
-            (cd "$dir" && composer config allow-plugins.infection/extension-installer true \
-                && composer require -n --quiet symfony/clock symfony/serializer symfony/property-access symfony/property-info symfony/validator \
-                && composer require -n --quiet --dev symfony/test-pack infection/infection)
-            cp -r "$root/evals/fixtures/symfony/." "$dir/"
-            src=src ;;
-    esac
+    case $fw in laravel) src=app ;; symfony) src=src ;; esac
+    if [ ! -d "$dir/.git" ]; then
+        rm -rf "$dir"
+        case $fw in
+            laravel)
+                composer create-project -n --quiet laravel/laravel "$dir"
+                (cd "$dir" && composer config allow-plugins.infection/extension-installer true \
+                    && composer require -n --quiet --dev infection/infection)
+                echo "require __DIR__.'/customers.php';" >> "$dir/routes/web.php" ;;
+            symfony)
+                composer create-project -n --quiet symfony/skeleton "$dir"
+                (cd "$dir" && composer config allow-plugins.infection/extension-installer true \
+                    && composer require -n --quiet symfony/clock symfony/serializer symfony/property-access symfony/property-info symfony/validator \
+                    && composer require -n --quiet --dev symfony/test-pack infection/infection) ;;
+        esac
+        (cd "$dir" && git init -q)
+    fi
+
+    # Copy fixtures and config on every run so edits reach an existing scaffold.
+    # Package changes still need a fresh scaffold: delete $work/<framework>.
+    (cd "$dir" && if git rev-parse -q --verify HEAD > /dev/null; then git reset -q --hard && git clean -qfd; fi)
+    cp -r "$root/evals/fixtures/$fw/." "$dir/"
     printf '{"source": {"directories": ["%s"]}, "testFramework": "phpunit"}\n' "$src" > "$dir/infection.json5"
-    (cd "$dir" && git init -q && git add -A \
-        && git -c user.name=eval -c user.email=eval@localhost commit -qm baseline)
+    (cd "$dir" && git add -A 2>/dev/null \
+        && { git diff --cached --quiet || git -c user.name=eval -c user.email=eval@localhost commit -qm baseline; })
 }
 
 run_one() {
@@ -101,7 +105,7 @@ run_one() {
 
 for entry in "${targets[@]}"; do
     IFS='|' read -r fw target filter <<< "$entry"
-    [ "$which" = all ] || [ "$which" = "$fw" ] || continue
+    [ "$which" = all ] || [ "$which" = "$fw" ] || [[ "$target" == *"$which"* ]] || continue
     scaffold "$fw"
     for variant in without with; do
         run_one "$fw" "$target" "$filter" "$variant"
