@@ -34,6 +34,20 @@ A PHP adaptation of [mavka-ai/unit-tests-skills](https://github.com/mavka-ai/uni
 
 Commands become `/php-unit-tests-skills:generate-php-tests <target>` and `/php-unit-tests-skills:generate-php-test-cases <target>`.
 
+The `blackpug` marketplace also lists the other Black Pug PHP plugins. Install any of them the same way, e.g. `/plugin install php-upgrade-skills@blackpug`:
+
+| Plugin | What it does |
+|---|---|
+| [`php-upgrade-skills`](https://github.com/gkwelding/php-upgrade-skills) | Laravel 10 to 13, Symfony 6.4 to 8 and PHPUnit / Pest upgrades, one major at a time |
+| [`php-security-review-skills`](https://github.com/gkwelding/php-security-review-skills) | Framework-aware security review with file:line findings (read-only) |
+| [`php-static-analysis-skills`](https://github.com/gkwelding/php-static-analysis-skills) | Fix PHPStan / Larastan / Psalm errors and raise the level, without ignores or baseline growth |
+| [`php-migration-skills`](https://github.com/gkwelding/php-migration-skills) | Write and review Laravel and Doctrine migrations safely |
+| [`php-queue-review-skills`](https://github.com/gkwelding/php-queue-review-skills) | Review and write Laravel queue jobs and Symfony Messenger handlers |
+| [`php-query-performance-skills`](https://github.com/gkwelding/php-query-performance-skills) | Find and fix N+1 and other query problems, proven by query counts |
+| [`php-testability-refactoring-skills`](https://github.com/gkwelding/php-testability-refactoring-skills) | Refactor code to be unit testable without changing behaviour |
+
+`/plugin marketplace update blackpug` updates everything installed from it.
+
 ### Copy into a project or user skills folder
 
 ```

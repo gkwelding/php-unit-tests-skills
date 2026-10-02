@@ -1,25 +1,194 @@
 {
-  "name": "blackpug",
-  "description": "Testing skills for PHP projects.",
-  "owner": {
-    "name": "Black Pug Ltd"
-  },
-  "plugins": [
-    {
-      "name": "php-unit-tests-skills",
-      "source": "./",
-      "displayName": "PHP Unit Test Skills",
-      "description": "Plan and generate PHPUnit / Pest tests for PHP, Laravel and Symfony code.",
-      "license": "MIT",
-      "category": "testing",
-      "keywords": [
-        "php",
-        "phpunit",
-        "pest",
-        "laravel",
-        "symfony"
-      ],
-      "repository": "https://github.com/gkwelding/php-unit-tests-skills"
-    }
-  ]
+    "name": "blackpug",
+    "description": "Agent skills for PHP, Laravel and Symfony development: tests, upgrades, security, static analysis, migrations, queues, query performance and testability.",
+    "owner": {
+        "name": "Black Pug Ltd"
+    },
+    "plugins": [
+        {
+            "name": "php-unit-tests-skills",
+            "source": "./",
+            "displayName": "PHP Unit Test Skills",
+            "description": "Plan and generate PHPUnit / Pest tests for PHP, Laravel and Symfony code.",
+            "license": "MIT",
+            "category": "testing",
+            "keywords": [
+                "php",
+                "phpunit",
+                "pest",
+                "laravel",
+                "symfony",
+                "unit-testing",
+                "test-generation",
+                "mockery"
+            ],
+            "repository": "https://github.com/gkwelding/php-unit-tests-skills"
+        },
+        {
+            "name": "php-upgrade-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-upgrade-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Upgrade Skills",
+            "description": "Upgrade Laravel (10 to 13), Symfony (6.4 to 8) and PHPUnit / Pest one major at a time: reads composer.lock, plans each step, applies the official breaking changes, uses Rector where it applies, runs the tests after every step and stops with a report when a package blocks.",
+            "license": "MIT",
+            "category": "maintenance",
+            "keywords": [
+                "php",
+                "upgrade",
+                "laravel",
+                "symfony",
+                "phpunit",
+                "pest",
+                "rector",
+                "composer",
+                "deprecations"
+            ],
+            "repository": "https://github.com/gkwelding/php-upgrade-skills"
+        },
+        {
+            "name": "php-security-review-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-security-review-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Security Review Skills",
+            "description": "Security review for PHP, Laravel and Symfony code.",
+            "license": "MIT",
+            "category": "security",
+            "keywords": [
+                "php",
+                "laravel",
+                "symfony",
+                "security",
+                "code-review",
+                "owasp",
+                "doctrine",
+                "twig",
+                "blade"
+            ],
+            "repository": "https://github.com/gkwelding/php-security-review-skills"
+        },
+        {
+            "name": "php-static-analysis-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-static-analysis-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Static Analysis Skills",
+            "description": "Fix PHPStan, Larastan and Psalm errors properly and raise a project's analysis level, without ignores, baseline growth or type lies.",
+            "license": "MIT",
+            "category": "code-quality",
+            "keywords": [
+                "php",
+                "phpstan",
+                "larastan",
+                "psalm",
+                "static-analysis",
+                "laravel",
+                "symfony",
+                "doctrine"
+            ],
+            "repository": "https://github.com/gkwelding/php-static-analysis-skills"
+        },
+        {
+            "name": "php-migration-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-migration-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Migration Skills",
+            "description": "Write and review database schema migrations safely in Laravel and Symfony (Doctrine Migrations): shipped migrations left alone, reversible down(), zero-downtime ordering, large-table DDL, batched backfills, verified against a disposable database.",
+            "license": "MIT",
+            "category": "database",
+            "keywords": [
+                "php",
+                "laravel",
+                "symfony",
+                "doctrine",
+                "doctrine-migrations",
+                "migrations",
+                "database",
+                "zero-downtime",
+                "mysql",
+                "postgresql"
+            ],
+            "repository": "https://github.com/gkwelding/php-migration-skills"
+        },
+        {
+            "name": "php-query-performance-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-query-performance-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Query Performance Skills",
+            "description": "Find and fix database query problems in Laravel (Eloquent) and Symfony (Doctrine ORM) code, above all N+1 queries.",
+            "license": "MIT",
+            "category": "performance",
+            "keywords": [
+                "php",
+                "laravel",
+                "eloquent",
+                "symfony",
+                "doctrine",
+                "n+1",
+                "eager-loading",
+                "query-performance",
+                "database"
+            ],
+            "repository": "https://github.com/gkwelding/php-query-performance-skills"
+        },
+        {
+            "name": "php-queue-review-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-queue-review-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Queue Review Skills",
+            "description": "Review and write background jobs in Laravel (queues, jobs, listeners, batches, chains) and Symfony Messenger.",
+            "license": "MIT",
+            "category": "reliability",
+            "keywords": [
+                "php",
+                "laravel",
+                "symfony",
+                "queues",
+                "jobs",
+                "messenger",
+                "idempotency",
+                "code-review"
+            ],
+            "repository": "https://github.com/gkwelding/php-queue-review-skills"
+        },
+        {
+            "name": "php-testability-refactoring-skills",
+            "source": {
+                "source": "github",
+                "repo": "gkwelding/php-testability-refactoring-skills",
+                "ref": "v0.1.0"
+            },
+            "displayName": "PHP Testability Refactoring Skills",
+            "description": "Refactor Laravel, Symfony and plain-PHP code to be unit testable without changing behaviour: pin behaviour with characterisation tests, then extract hidden dependencies (facades, statics, new, clock, randomness, I/O) into injected collaborators in small, verified steps.",
+            "license": "MIT",
+            "category": "refactoring",
+            "keywords": [
+                "php",
+                "laravel",
+                "symfony",
+                "refactoring",
+                "testability",
+                "dependency-injection",
+                "characterisation-tests",
+                "legacy-code"
+            ],
+            "repository": "https://github.com/gkwelding/php-testability-refactoring-skills"
+        }
+    ]
 }
