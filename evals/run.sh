@@ -18,7 +18,7 @@ stamp=$(date +%Y%m%d-%H%M%S)
 results=$work/results/$stamp
 mkdir -p "$results"
 csv=$results/results.csv
-echo "framework,target,variant,tests,failures,errors,skipped,msi" > "$csv"
+echo "framework,target,variant,tests,failures,errors,skipped,msi,cost_usd,turns,minutes" > "$csv"
 
 # framework|target|comma-separated files Infection mutates
 targets=(
@@ -86,9 +86,12 @@ run_one() {
     echo "== $name"
     # MSYS_NO_PATHCONV stops Git Bash on Windows rewriting "/generate-php-tests" into a file path.
     (cd "$dir" && MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' claude -p "$prompt" ${MODEL:+--model "$MODEL"} \
-        --max-budget-usd "$budget" --no-session-persistence --permission-mode acceptEdits \
+        --max-budget-usd "$budget" --no-session-persistence --permission-mode acceptEdits --output-format json \
         --allowedTools "Read,Write,Edit,Glob,Grep,Bash(php:*),Bash(vendor/bin/phpunit:*),Bash(vendor/bin/pest:*),Bash(vendor/bin/phpstan:*),Bash(vendor/bin/pint:*),Bash(vendor/bin/php-cs-fixer:*),Bash(bin/phpunit:*),Bash(bin/console:*),Bash(composer dump-autoload:*),Bash(git diff:*),Bash(git status:*)" \
-        > "$out.claude.txt" 2>&1) || echo "   claude exited non-zero, see $results/$name.claude.txt"
+        > "$out.claude.json" 2> "$out.claude.err") || echo "   claude exited non-zero, see $results/$name.claude.err"
+    # Keep Claude's final message readable next to the raw JSON.
+    (cd "$dir" && php -r '$j = json_decode((string) @file_get_contents($argv[1]), true); file_put_contents($argv[2], $j["result"] ?? "");' \
+        "$out.claude.json" "$out.claude.txt")
     (cd "$dir" && git add -A 2>/dev/null && git diff --cached -- . ':!.claude' > "$out.diff")
 
     # #[CoversClass] and friends narrow which code PHPUnit credits a test with, so code the tests
@@ -124,12 +127,15 @@ run_one() {
     fi
 
     (cd "$dir" && php -r '
-        [, $junit, $infection, $row] = $argv;
+        [, $junit, $infection, $claude, $row] = $argv;
         $suite = is_file($junit) ? simplexml_load_file($junit)->testsuite : null;
         $stats = is_file($infection) ? json_decode(file_get_contents($infection), true)["stats"] : [];
+        $run = json_decode((string) @file_get_contents($claude), true) ?? [];
         $counts = $suite ? "{$suite["tests"]},{$suite["failures"]},{$suite["errors"]},{$suite["skipped"]}" : ",,,";
-        echo "$row,$counts,", $stats["msi"] ?? "", "\n";
-    ' "$junit" "$out.infection.json" "$fw,$target,$variant") >> "$csv"
+        $cost = isset($run["total_cost_usd"]) ? round($run["total_cost_usd"], 2) : "";
+        $minutes = isset($run["duration_ms"]) ? round($run["duration_ms"] / 60000, 1) : "";
+        echo "$row,$counts,", $stats["msi"] ?? "", ",$cost,", $run["num_turns"] ?? "", ",$minutes\n";
+    ' "$junit" "$out.infection.json" "$out.claude.json" "$fw,$target,$variant") >> "$csv"
 }
 
 for entry in "${targets[@]}"; do
