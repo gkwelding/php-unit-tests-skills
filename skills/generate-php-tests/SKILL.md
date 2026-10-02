@@ -118,7 +118,7 @@ Step 4: php -l ok, Pint applied, `php artisan test --filter=CustomerControllerTe
 
 ## Rules Reference
 
-Paths are relative to `./rules/tests/`. Read the ones that apply before writing.
+Paths are relative to `./rules/`. Read the ones that apply before writing.
 
 > General rules are duplicated in `generate-php-test-cases/rules/general/`. Keep both copies identical.
 

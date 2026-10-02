@@ -8,7 +8,7 @@ tags: planning, laravel, symfony, status-codes, test-levels
 
 When planning, the **Then** of a case must be the outcome the framework actually produces, and each case needs a test level. Getting either wrong means the plan can't be implemented as written.
 
-> Shared by `generate-php-tests` and `generate-php-test-cases`. The detailed rules live in `generate-php-tests/rules/tests/laravel/` and `symfony/`. Keep both copies identical.
+> Shared by `generate-php-tests` and `generate-php-test-cases`. The detailed rules live in `generate-php-tests/rules/laravel/` and `symfony/`. Keep both copies identical.
 
 ### Test Level per Case
 

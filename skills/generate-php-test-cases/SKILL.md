@@ -118,7 +118,7 @@ Next step: `generate-php-tests src/Controller/Api/OrderController.php` will use 
 
 Read all of these before listing cases. Paths are relative to `./rules/general/`.
 
-> These files are duplicated in `generate-php-tests/rules/tests/general/`. Keep both copies identical.
+> These files are duplicated in `generate-php-tests/rules/general/`. Keep both copies identical.
 
 - `technology-stack-detection.md` - composer.json, versions, runners
 - `code-context-analysis.md` - what to read first, per framework

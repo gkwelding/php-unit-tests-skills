@@ -83,7 +83,7 @@ skills/
 │   └── rules/general/           # shared rules (copy)
 └── generate-php-tests/
     ├── SKILL.md
-    └── rules/tests/
+    └── rules/
         ├── general/             # shared rules (copy, keep identical)
         ├── php/                 # PHPUnit, Pest, mocking, determinism, JSON, logging
         ├── laravel/             # HTTP, fakes, database, jobs/commands
@@ -91,10 +91,10 @@ skills/
         └── post-generation/     # lint/static analysis, execution
 ```
 
-`rules/general/` exists in both skills so each can be installed alone. Keep them identical:
+`rules/general/` exists in both skills so each can be installed alone. CI (`.github/workflows/check-rules.yml`) fails if the copies differ. Check locally with:
 
 ```
-diff -r skills/generate-php-test-cases/rules/general skills/generate-php-tests/rules/tests/general
+diff -r skills/generate-php-test-cases/rules/general skills/generate-php-tests/rules/general
 ```
 
 ## Status
