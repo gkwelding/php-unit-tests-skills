@@ -6,8 +6,8 @@
 # Env:   MODEL       model for claude -p (default: your claude default)
 #        BUDGET_USD  spend cap per claude run (default 5)
 #        WORK        scratch directory for the scaffolded apps (default evals/.work)
-#        COVERAGE_PHP_OPTS  php options that load a coverage driver for Infection's initial run,
-#                    e.g. "-d zend_extension=/path/to/xdebug.dll" when it isn't enabled in php.ini
+#        COVERAGE_PHP_OPTS  php options that load a coverage driver for the coverage run,
+#                    e.g. "-d zend_extension=/path/to/xdebug.dll" when it isn't enabled in php.ini (no spaces in the path)
 set -euo pipefail
 
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -57,7 +57,10 @@ scaffold() {
     # Package changes still need a fresh scaffold: delete $work/<framework>.
     (cd "$dir" && if git rev-parse -q --verify HEAD > /dev/null; then git reset -q --hard && git clean -qfd; fi)
     cp -r "$root/evals/fixtures/$fw/." "$dir/"
-    printf '{"source": {"directories": ["%s"]}, "testFramework": "phpunit"}\n' "$src" > "$dir/infection.json5"
+    # PublicVisibility is off: it says nothing about test quality, and coverage never marks a
+    # controller action's signature line, so it would count as surviving for every variant.
+    printf '{"source": {"directories": ["%s"]}, "testFramework": "phpunit", "mutators": {"@default": true, "PublicVisibility": false}}\n' \
+        "$src" > "$dir/infection.json5"
     (cd "$dir" && git add -A 2>/dev/null \
         && { git diff --cached --quiet || git -c user.name=eval -c user.email=eval@localhost commit -qm baseline; })
 }
@@ -84,15 +87,34 @@ run_one() {
         --allowedTools "Read,Write,Edit,Glob,Grep,Bash(php:*),Bash(vendor/bin/phpunit:*),Bash(vendor/bin/pest:*),Bash(vendor/bin/phpstan:*),Bash(vendor/bin/pint:*),Bash(vendor/bin/php-cs-fixer:*),Bash(bin/phpunit:*),Bash(bin/console:*),Bash(composer dump-autoload:*),Bash(git diff:*),Bash(git status:*)" \
         > "$out.claude.txt" 2>&1) || echo "   claude exited non-zero, see $results/$name.claude.txt"
     (cd "$dir" && git add -A 2>/dev/null && git diff --cached -- . ':!.claude' > "$out.diff")
-    (cd "$dir" && vendor/bin/phpunit --log-junit "$out.junit.xml" > "$out.phpunit.txt" 2>&1) || true
-    # Infection refuses to run if the suite fails; the msi column is then blank.
-    # auto_prepend_file is cleared because Infection rejects it (Laravel Herd sets one).
+
+    # #[CoversClass] and friends narrow which code PHPUnit credits a test with, so code the tests
+    # do exercise (a DTO behind a controller) would score as uncovered. Strip that metadata in the
+    # scratch app before scoring; the saved diff keeps the tests as written.
+    [ -d "$dir/tests" ] && find "$dir/tests" -name '*.php' \
+        -exec perl -i -ne 'print unless /^\s*#\[Covers\w*(\(.*\))?\]\s*$/ || /\@covers/' {} +
+    # One PHPUnit run gives the counts and the coverage Infection needs. Infection's own initial run
+    # is skipped: inside Infection it exits part-way through Symfony WebTestCase suites that pass
+    # when PHPUnit is run directly. auto_prepend_file is cleared because Infection rejects it
+    # (Laravel Herd sets one).
+    local cov=$out.coverage junit=$out.coverage/junit.xml
+    # shellcheck disable=SC2086 # COVERAGE_PHP_OPTS is a list of php options
+    (cd "$dir" && php -d auto_prepend_file= ${COVERAGE_PHP_OPTS:-} vendor/bin/phpunit \
+        --coverage-xml="$cov/coverage-xml" --log-junit="$junit" > "$out.phpunit.txt" 2>&1) || true
+
+    # Mutation scores only mean something against a green suite: a failing test "kills" every
+    # mutant. With failures or no coverage the msi column stays blank.
     local files
     IFS=, read -ra files <<< "$filter"
-    # --with-uncovered counts target code no test reaches as surviving mutants.
-    (cd "$dir" && php -d auto_prepend_file= vendor/bin/infection --threads=max --no-progress --with-uncovered \
-        ${COVERAGE_PHP_OPTS:+--initial-tests-php-options="$COVERAGE_PHP_OPTS"} \
-        --logger-summary-json="$out.infection.json" "${files[@]}" > "$out.infection.txt" 2>&1) || true
+    if (cd "$dir" && [ -d "$cov/coverage-xml" ] && php -r '
+            $x = @simplexml_load_file($argv[1]);
+            exit($x && (int) $x->testsuite["failures"] + (int) $x->testsuite["errors"] === 0 ? 0 : 1);
+        ' "$junit"); then
+        # --with-uncovered counts target code no test reaches as surviving mutants.
+        (cd "$dir" && php -d auto_prepend_file= vendor/bin/infection --threads=max --no-progress --with-uncovered \
+            --coverage="$cov" --skip-initial-tests \
+            --logger-summary-json="$out.infection.json" "${files[@]}" > "$out.infection.txt" 2>&1) || true
+    fi
 
     (cd "$dir" && php -r '
         [, $junit, $infection, $row] = $argv;
@@ -100,7 +122,7 @@ run_one() {
         $stats = is_file($infection) ? json_decode(file_get_contents($infection), true)["stats"] : [];
         $counts = $suite ? "{$suite["tests"]},{$suite["failures"]},{$suite["errors"]},{$suite["skipped"]}" : ",,,";
         echo "$row,$counts,", $stats["msi"] ?? "", "\n";
-    ' "$out.junit.xml" "$out.infection.json" "$fw,$target,$variant") >> "$csv"
+    ' "$junit" "$out.infection.json" "$fw,$target,$variant") >> "$csv"
 }
 
 for entry in "${targets[@]}"; do
