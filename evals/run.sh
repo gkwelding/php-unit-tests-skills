@@ -18,7 +18,7 @@ stamp=$(date +%Y%m%d-%H%M%S)
 results=$work/results/$stamp
 mkdir -p "$results"
 csv=$results/results.csv
-echo "framework,target,variant,tests,failures,errors,skipped,msi,cost_usd,turns,minutes" > "$csv"
+echo "framework,target,variant,tests,failures,errors,skipped,msi,cost_usd,turns,minutes,test_methods,test_loc,loc_per_test,asserts_per_test,logic,loose_asserts,doubles" > "$csv"
 
 # framework|target|comma-separated files Infection mutates
 targets=(
@@ -126,16 +126,20 @@ run_one() {
             --logger-summary-json="$out.infection.json" "${files[@]}" > "$out.infection.txt" 2>&1) || true
     fi
 
+    # Static quality metrics for the tests as written (from the diff, before Covers stripping).
+    local quality
+    quality=$(cd "$dir" && php "$root/evals/metrics.php" "$out.diff")
+
     (cd "$dir" && php -r '
-        [, $junit, $infection, $claude, $row] = $argv;
+        [, $junit, $infection, $claude, $row, $quality] = $argv;
         $suite = is_file($junit) ? simplexml_load_file($junit)->testsuite : null;
         $stats = is_file($infection) ? json_decode(file_get_contents($infection), true)["stats"] : [];
         $run = json_decode((string) @file_get_contents($claude), true) ?? [];
         $counts = $suite ? "{$suite["tests"]},{$suite["failures"]},{$suite["errors"]},{$suite["skipped"]}" : ",,,";
         $cost = isset($run["total_cost_usd"]) ? round($run["total_cost_usd"], 2) : "";
         $minutes = isset($run["duration_ms"]) ? round($run["duration_ms"] / 60000, 1) : "";
-        echo "$row,$counts,", $stats["msi"] ?? "", ",$cost,", $run["num_turns"] ?? "", ",$minutes\n";
-    ' "$junit" "$out.infection.json" "$out.claude.json" "$fw,$target,$variant") >> "$csv"
+        echo "$row,$counts,", $stats["msi"] ?? "", ",$cost,", $run["num_turns"] ?? "", ",$minutes,$quality\n";
+    ' "$junit" "$out.infection.json" "$out.claude.json" "$fw,$target,$variant" "$quality") >> "$csv"
 }
 
 for entry in "${targets[@]}"; do

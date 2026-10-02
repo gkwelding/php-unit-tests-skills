@@ -14,6 +14,8 @@ It then runs the whole suite once with coverage, runs Infection on the target's 
 | Column | Meaning |
 |---|---|
 | `tests`, `failures`, `errors`, `skipped` | From the PHPUnit JUnit log, whole suite |
+| `test_methods`, `test_loc`, `loc_per_test`, `asserts_per_test` | Shape of the test code as written, from the run's diff (`evals/metrics.php`): test methods or Pest `it()`/`test()` calls, non-blank non-comment lines (excluding `use`/`namespace`), and the averages per test method. Smaller, more focused tests have lower values |
+| `logic`, `loose_asserts`, `doubles` | Rule-violation counts in the test code: `if`/`foreach`/`for`/`while`/`switch`/`match`, `assertEquals`-style or `assertTrue(... == ...)` comparisons, and test doubles created (`createMock`, `Mockery::mock`, `->mock()`, `::shouldReceive`, ...). Lower is better; doubles at an I/O boundary are fine, so read the diff |
 | `cost_usd`, `turns`, `minutes` | From `claude -p --output-format json`. When both variants end at the same score, a trap can still show up as extra debugging turns and cost |
 | `msi` | Infection's mutation score for the target's files, counting code no test reaches as surviving (`--with-uncovered`). Blank if the suite has failures or errors (a failing test would "kill" every mutant), the suite executed no app code at all, or no coverage driver is loaded |
 
