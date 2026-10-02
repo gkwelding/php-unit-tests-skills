@@ -20,12 +20,10 @@ This project uses PHP test generation skills.
 
 ### Workflow
 
-When asked to write tests for a target, run both skills in order:
-
-1. `generate-php-test-cases <target>` produces the plan.
-2. `generate-php-tests <target>` writes the tests from that plan. It doesn't re-analyse from scratch; it names any case it adds or drops, and why.
-
-Stop after step 1 only when the user asked for analysis alone.
+- Asked to write tests: run `generate-php-tests <target>`. It prints the case list itself before writing, so don't run `generate-php-test-cases` first.
+- Asked only what to test, for a test plan or a coverage review: run `generate-php-test-cases <target>` and stop.
+- If a case list from `generate-php-test-cases` is already in the conversation, `generate-php-tests` uses it as the plan rather than re-analysing.
+- No target named: both skills work through the PHP files changed on the current branch.
 
 ### Key Rules
 

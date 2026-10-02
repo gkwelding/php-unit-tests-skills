@@ -15,13 +15,13 @@ A PHP adaptation of [mavka-ai/unit-tests-skills](https://github.com/mavka-ai/uni
 
 ## What's Covered
 
-**General (all PHP):** case selection with INCLUDE/EXCLUDE rules, validation boundary coverage, PHP truthiness and `match`/enum branches, naming, Given-When-Then, `assertSame` over `assertEquals`, test data via factories/builders, stubs vs mocks, argument capture (PHPUnit and Mockery), time/UUID/random determinism, literal JSON payloads, PSR-3 / Monolog log assertions.
+**General (all PHP):** case selection with INCLUDE/EXCLUDE rules, validation boundary coverage, PHP truthiness and `match`/enum branches, naming, Given-When-Then, `assertSame` over `assertEquals`, test data via factories/builders, stubs vs mocks, argument capture (PHPUnit and Mockery), time/UUID/random/sleep determinism, literal JSON payloads, PSR-3 / Monolog log assertions.
 
-**Laravel:** Feature vs Unit base class (and the facade-root trap), HTTP tests with the web-vs-JSON status table, validation assertions that name the rule, Sanctum, fakes (Queue, Bus, Event, Mail, Notification, Http, Storage) and their gotchas, Eloquent via `RefreshDatabase` and factories, jobs (`withFakeQueueInteractions`), listeners, Artisan commands.
+**Laravel:** Feature vs Unit base class (and the facade-root trap), HTTP tests with the web-vs-JSON status table, validation assertions that name the rule, Sanctum, fakes (Queue, Bus, Event, Mail, Notification, Http, Storage, Exceptions) and their gotchas, notification content, Eloquent via `RefreshDatabase` and factories, jobs (`withFakeQueueInteractions`), listeners, Artisan commands.
 
-**Symfony:** `TestCase` vs `KernelTestCase` vs `WebTestCase`, security entry-point table, `#[MapRequestPayload]` violations asserted by constraint code, forms, replacing container services (and the reboot trap), validator and `ConstraintValidatorTestCase`, Doctrine repositories against a real test DB, Foundry / DAMA, Messenger handlers and dispatch (in-memory transport), `CommandTester`, event subscribers, voters, `MockHttpClient`.
+**Symfony:** `TestCase` vs `KernelTestCase` vs `WebTestCase`, security entry-point table, `#[MapRequestPayload]` violations asserted by constraint code, forms, replacing container services (and the reboot trap), validator and `ConstraintValidatorTestCase`, Doctrine repositories against a real test DB, Foundry / DAMA, Messenger handlers and dispatch (in-memory transport), `CommandTester`, event subscribers, voters, `MockHttpClient`, custom authenticators, normalizers, Twig extensions.
 
-**Runners:** PHPUnit 9-12 and Pest, following whatever the project already uses.
+**Runners:** PHPUnit 9-12 and Pest, following whatever the project already uses, run on the host or through Sail, DDEV, Lando or Docker Compose.
 
 ## Install
 
@@ -44,15 +44,19 @@ cp -r skills/* .claude/skills/
 
 ### npx skills / openskills
 
-Works the same as the upstream repo once this is in a git repository:
-
 ```
 npx skills add gkwelding/php-unit-tests-skills
 ```
 
 ### claude.ai
 
-Upload the `.skill` files (Settings → Capabilities → Skills).
+Build the packages, then upload `dist/generate-php-tests.skill` and `dist/generate-php-test-cases.skill` (Settings → Capabilities → Skills):
+
+```
+sh scripts/build-skills.sh
+```
+
+The script packages the committed files at `HEAD`; commit edits first.
 
 ### AGENTS.md
 
@@ -64,7 +68,10 @@ Add [templates/AGENTS-SNIPPET.md](templates/AGENTS-SNIPPET.md) to the project's 
 /generate-php-test-cases app/Http/Controllers/Api/CustomerController.php
 /generate-php-tests app/Services/InvoiceService.php
 /generate-php-tests src/MessageHandler/SendReceiptHandler.php
+/generate-php-tests          # no target: the PHP files changed on this branch
 ```
+
+To write tests, use `generate-php-tests` on its own: it prints the case list before writing. Use `generate-php-test-cases` when you only want the plan.
 
 ## Ground Rules the Skills Enforce
 
@@ -84,11 +91,12 @@ skills/
 └── generate-php-tests/
     ├── SKILL.md
     └── rules/
-        ├── general/             # shared rules (copy, keep identical)
+        ├── general/             # shared rules (copy, CI-checked identical)
         ├── php/                 # PHPUnit, Pest, mocking, determinism, JSON, logging
         ├── laravel/             # HTTP, fakes, database, jobs/commands
-        ├── symfony/             # controllers, validation, Doctrine, Messenger/console/etc.
+        ├── symfony/             # controllers, validation, Doctrine, Messenger/console, security/serializer/Twig
         └── post-generation/     # lint/static analysis, execution
+scripts/build-skills.sh          # packages dist/*.skill for claude.ai
 ```
 
 `rules/general/` exists in both skills so each can be installed alone. CI (`.github/workflows/check-rules.yml`) fails if the copies differ. Check locally with:
