@@ -8,7 +8,7 @@ final class StoreCustomerRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->email_verified_at !== null;
+        return $this->user()->email_verified_at !== null;
     }
 
     public function rules(): array
@@ -16,7 +16,7 @@ final class StoreCustomerRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:2', 'max:100'],
             'email' => ['required', 'email', 'max:255'],
-            'newsletter' => ['sometimes', 'boolean'],
+            'newsletter' => ['boolean'],
         ];
     }
 }
