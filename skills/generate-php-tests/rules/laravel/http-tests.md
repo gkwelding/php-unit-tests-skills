@@ -52,7 +52,7 @@ Use the database trait the project uses (`RefreshDatabase`, `LazilyRefreshDataba
 
 1. Success status and the response fields that matter
 2. Each validation rule (see below)
-3. Unauthenticated (see table)
+3. Unauthenticated (status from `general/framework-outcomes.md`)
 4. Authenticated but not allowed (policy/gate/`authorize()` in the Form Request)
 5. Missing resource (route model binding returns 404)
 6. Each branch in the controller and each exception the handler maps to a status
@@ -60,17 +60,16 @@ Use the database trait the project uses (`RefreshDatabase`, `LazilyRefreshDataba
 
 ### Web vs JSON Changes the Status
 
-Laravel answers differently depending on whether the request expects JSON. Use `getJson()`/`postJson()` for API routes and `get()`/`post()` for web routes, and assert what that path actually returns.
+Laravel answers differently depending on whether the request expects JSON. Use `getJson()`/`postJson()` for API routes and `get()`/`post()` for web routes, and assert what that path actually returns. The statuses are in `general/framework-outcomes.md` (Laravel HTTP Outcomes). Assert them with:
 
-| Situation | Web request (`get`, `post`) | JSON request (`getJson`, `postJson`) |
-|---|---|---|
-| Unauthenticated (`auth` middleware) | 302 to `/login` → `assertRedirect('/login')` | 401 → `assertUnauthorized()` |
-| Validation fails | 302 back with session errors → `assertInvalid([...])` / `assertSessionHasErrors` | 422 → `assertUnprocessable()` + `assertJsonValidationErrors` / `assertInvalid` |
-| Policy / gate denies | 403 → `assertForbidden()` | 403 |
-| Form Request `authorize()` returns false | 403 | 403 |
-| `Response::denyAsNotFound()` / `Gate::denyAsNotFound` | 404 | 404 |
-| Model not found via binding | 404 → `assertNotFound()` | 404 |
-| Email not verified (`verified`) | 302 to verification notice | 403 |
+| Outcome | Assertion |
+|---|---|
+| 302 to login | `assertRedirect('/login')` |
+| 401 | `assertUnauthorized()` |
+| Web validation failure | `assertInvalid([...])` / `assertSessionHasErrors` |
+| 422 | `assertUnprocessable()` + `assertJsonValidationErrors` / `assertInvalid` |
+| 403 | `assertForbidden()` |
+| 404 | `assertNotFound()` |
 
 Read `bootstrap/app.php` (Laravel 11+) or `app/Http/Kernel.php` and `app/Exceptions/Handler.php` for custom redirects (`redirectGuestsTo`), exception rendering and renamed login routes. Name the test after the outcome you assert: `..._unauthenticated_redirectsToLogin` vs `..._unauthenticated_returns401`.
 

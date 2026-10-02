@@ -8,7 +8,7 @@ tags: planning, laravel, symfony, status-codes, test-levels
 
 When planning, the **Then** of a case must be the outcome the framework actually produces, and each case needs a test level. Getting either wrong means the plan can't be implemented as written.
 
-> Shared by `generate-php-tests` and `generate-php-test-cases`. The detailed rules live in `generate-php-tests/rules/laravel/` and `symfony/`. Keep both copies identical.
+> Shared by `generate-php-tests` and `generate-php-test-cases` (CI keeps both copies identical). This file is the single source for status codes; `generate-php-tests`' `laravel/` and `symfony/` rules cover how to assert them.
 
 ### Test Level per Case
 
@@ -40,7 +40,9 @@ Check `bootstrap/app.php` / exception handler for overrides before planning.
 |---|---|
 | Unauthenticated, `form_login` | 302 to login path |
 | Unauthenticated, `http_basic` | 401 |
-| Unauthenticated, custom entry point | Whatever its `start()` returns (read it) |
+| Unauthenticated, custom authenticator implementing `AuthenticationEntryPointInterface` | Whatever its `start()` returns (read it) |
+| Unauthenticated, `entry_point:` set explicitly on the firewall | That authenticator's `start()` |
+| Unauthenticated, `json_login` only / stateless API | Usually 401; read the entry point |
 | Authenticated, denied | 403 unless `access_denied_handler`/`access_denied_url` changes it |
 | `#[MapRequestPayload]` validation fails | 422 with `violations` (or the attribute's `validationFailedStatusCode`) |
 | `#[MapRequestPayload]` malformed JSON | 400 |

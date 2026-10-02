@@ -63,7 +63,7 @@ Use Foundry, DAMA DoctrineTestBundle, fixtures or whatever the project already u
 
 1. Success status and the response fields that matter
 2. Each validation constraint on the mapped payload/query (see below)
-3. Unauthenticated (see table)
+3. Unauthenticated (status from `general/framework-outcomes.md`)
 4. Authenticated but denied (`#[IsGranted]`, `denyAccessUnlessGranted`, voters, `access_control`)
 5. Entity not found (`#[MapEntity]` / param converter returns 404)
 6. Each branch in the action and each exception mapped to a status
@@ -71,17 +71,7 @@ Use Foundry, DAMA DoctrineTestBundle, fixtures or whatever the project already u
 
 ### Unauthenticated Requests Depend on the Firewall
 
-Read `config/packages/security.yaml`. The firewall's entry point decides the response:
-
-| Firewall config | Unauthenticated response | Assert |
-|---|---|---|
-| `form_login` | 302 to login path | `assertResponseRedirects('/login')` (or the configured `login_path`) |
-| `http_basic` | 401 | `assertResponseStatusCodeSame(401)` |
-| Custom authenticator implementing `AuthenticationEntryPointInterface` | Whatever `start()` returns | Read it |
-| `json_login` only / stateless API with a custom entry point | Usually 401 | Read the entry point |
-| `entry_point:` set explicitly | That authenticator's `start()` | Read it |
-
-Authenticated but denied is 403 unless `access_denied_handler` or `access_denied_url` changes it. Name the test after the outcome you assert.
+Read `config/packages/security.yaml`. The firewall's entry point decides the response; the statuses are in `general/framework-outcomes.md` (Symfony HTTP Outcomes). Assert a redirect with `assertResponseRedirects('/login')` (or the configured `login_path`) and a status with `assertResponseStatusCodeSame(401)` / `(403)`. Name the test after the outcome you assert.
 
 `$client->loginUser($user)` logs into the `main` firewall. Pass the firewall name if it isn't `main`: `$client->loginUser($user, 'api')`. For token-authenticated APIs where `loginUser` doesn't fit the authenticator, send the header the authenticator reads.
 
