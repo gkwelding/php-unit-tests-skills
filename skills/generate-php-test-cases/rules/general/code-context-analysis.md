@@ -1,6 +1,5 @@
 ---
 title: Code Context Analysis
-impact: HIGH
 tags: tests, context, dependencies, analysis
 ---
 

@@ -1,6 +1,5 @@
 ---
 title: Framework Outcomes and Test Levels (Planning)
-impact: HIGH
 tags: planning, laravel, symfony, status-codes, test-levels
 ---
 

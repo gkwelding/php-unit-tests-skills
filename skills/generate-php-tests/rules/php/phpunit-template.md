@@ -1,6 +1,5 @@
 ---
 title: PHPUnit Test Template
-impact: HIGH
 tags: php, phpunit, template, structure
 ---
 
@@ -91,6 +90,6 @@ That `try` is the one control structure allowed in a test body.
 
 1. Mirror the SUT's namespace under the test namespace from `autoload-dev`
 2. `createStub()` for doubles you only configure returns on; `createMock()` only when you set `expects()`
-3. `assertSame()` by default (see `general/general-principles.md`)
+3. `assertSame()` by default (see `general/principles.md`)
 4. Every test performs at least one assertion. A test with none is reported as risky. Don't use `expectNotToPerformAssertions()` to silence that; find what to assert.
 5. Data providers are `public static` in PHPUnit 10+

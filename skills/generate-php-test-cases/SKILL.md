@@ -118,7 +118,7 @@ Next step: `generate-php-tests src/Controller/Api/OrderController.php` will use 
 
 Read all of these before listing cases. Paths are relative to `./rules/general/`.
 
-> These files are duplicated in `generate-php-tests/rules/general/`. Keep both copies identical.
+> These files are duplicated in `generate-php-tests/rules/general/`. CI keeps both copies identical.
 
 - `technology-stack-detection.md` - composer.json, versions, runners
 - `code-context-analysis.md` - what to read first, per framework
@@ -126,12 +126,5 @@ Read all of these before listing cases. Paths are relative to `./rules/general/`
 - `test-case-generation-strategy.md` - INCLUDE/EXCLUDE, validation boundaries
 - `framework-outcomes.md` - test levels and real status codes for Laravel and Symfony
 - `naming-conventions.md` - case IDs
-- `general-principles.md` - Given-When-Then, determinism
-- `what-makes-good-test.md` - clarity, completeness, conciseness, resilience
-- `keep-tests-focused.md` - one scenario per case
-- `test-behaviors-not-methods.md` - one behaviour per case
-- `prefer-public-apis.md` - reach private logic through public methods
+- `principles.md` - one scenario and one behaviour per case, public APIs, what the Then may depend on
 - `cleanly-create-test-data.md` - pin values the outcome depends on
-- `keep-cause-effect-clear.md`
-- `no-logic-in-tests.md`
-- `verify-relevant-arguments-only.md`

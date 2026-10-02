@@ -1,6 +1,5 @@
 ---
 title: Technology Stack Detection
-impact: HIGH
 tags: tests, detection, php, laravel, symfony, pest, phpunit
 ---
 

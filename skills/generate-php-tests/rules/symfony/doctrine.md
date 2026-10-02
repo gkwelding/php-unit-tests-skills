@@ -1,6 +1,5 @@
 ---
 title: Doctrine Entities and Repositories
-impact: HIGH
 tags: symfony, doctrine, repositories, entities, foundry
 ---
 

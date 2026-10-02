@@ -1,6 +1,5 @@
 ---
 title: Laravel Database and Eloquent
-impact: HIGH
 tags: laravel, eloquent, database, factories
 ---
 

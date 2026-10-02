@@ -1,6 +1,5 @@
 ---
 title: Mocking, Stubbing and Argument Capture
-impact: HIGH
 tags: php, phpunit, mockery, mocks, stubs, capture
 ---
 

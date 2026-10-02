@@ -1,6 +1,5 @@
 ---
 title: Laravel Jobs, Listeners, Commands and Scheduling
-impact: HIGH
 tags: laravel, jobs, queues, listeners, artisan, commands
 ---
 

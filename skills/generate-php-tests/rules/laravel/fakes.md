@@ -1,6 +1,5 @@
 ---
 title: Laravel Fakes (Queue, Bus, Event, Mail, Notification, Http, Storage)
-impact: HIGH
 tags: laravel, fakes, queue, events, mail, notifications, http
 ---
 

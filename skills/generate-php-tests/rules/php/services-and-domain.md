@@ -1,6 +1,5 @@
 ---
 title: Service and Domain Unit Tests
-impact: HIGH
 tags: php, unit, services, domain, actions
 ---
 

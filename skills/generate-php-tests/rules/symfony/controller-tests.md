@@ -1,6 +1,5 @@
 ---
 title: Symfony Controller Tests
-impact: HIGH
 tags: symfony, controllers, webtestcase, security, validation
 ---
 
@@ -119,7 +118,7 @@ The selector depends on the form theme; read the rendered HTML of a neighbouring
 $this->assertResponseRedirects('/orders/42');
 ```
 
-Use a literal path, not `$router->generate()` (`general/no-logic-in-tests.md`). For IDs created during the request, fetch the entity first.
+Use a literal path, not `$router->generate()` (`general/principles.md`). For IDs created during the request, fetch the entity first.
 
 ### Replacing Services
 

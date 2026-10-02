@@ -1,6 +1,5 @@
 ---
 title: Post-Generation Test Execution
-impact: HIGH
 tags: php, phpunit, pest, execution, verification
 ---
 

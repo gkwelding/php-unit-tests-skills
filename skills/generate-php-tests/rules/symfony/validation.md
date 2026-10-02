@@ -1,6 +1,5 @@
 ---
 title: Symfony Validation and Custom Constraints
-impact: HIGH
 tags: symfony, validator, constraints
 ---
 

@@ -1,6 +1,5 @@
 ---
 title: Time, IDs and Randomness
-impact: HIGH
 tags: php, determinism, clock, uuid, faker, carbon
 ---
 

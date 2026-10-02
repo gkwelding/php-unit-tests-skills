@@ -1,6 +1,5 @@
 ---
 title: Test Naming Conventions
-impact: HIGH
 tags: tests, naming, conventions, readability
 ---
 

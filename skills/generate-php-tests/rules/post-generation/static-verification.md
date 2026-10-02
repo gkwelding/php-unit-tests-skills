@@ -1,6 +1,5 @@
 ---
 title: Post-Generation Static Verification
-impact: HIGH
 tags: php, lint, phpstan, verification
 ---
 

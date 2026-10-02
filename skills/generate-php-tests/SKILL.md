@@ -120,7 +120,7 @@ Step 4: php -l ok, Pint applied, `php artisan test --filter=CustomerControllerTe
 
 Paths are relative to `./rules/`. Read the ones that apply before writing.
 
-> General rules are duplicated in `generate-php-test-cases/rules/general/`. Keep both copies identical.
+> General rules are duplicated in `generate-php-test-cases/rules/general/`. CI keeps both copies identical.
 
 ### Always
 
@@ -130,16 +130,9 @@ Paths are relative to `./rules/`. Read the ones that apply before writing.
 - `general/test-case-generation-strategy.md` - INCLUDE/EXCLUDE, validation boundaries
 - `general/framework-outcomes.md` - test levels, real status codes
 - `general/naming-conventions.md` - case IDs and method/description naming
-- `general/general-principles.md` - Given-When-Then, actual/expected, assertSame
-- `general/what-makes-good-test.md` - clarity, completeness, conciseness, resilience
+- `general/principles.md` - structure, strict assertions, focus, no logic, public APIs, argument verification
 - `general/cleanly-create-test-data.md` - factories, helpers, pinning values
-- `general/keep-cause-effect-clear.md` - what belongs in setUp
-- `general/keep-tests-focused.md` - one scenario per test, datasets
-- `general/test-behaviors-not-methods.md` - one behaviour per test
-- `general/no-logic-in-tests.md` - literals, no route()/trans() in expectations
-- `general/prefer-public-apis.md` - no reflection on private methods
-- `general/verify-relevant-arguments-only.md` - pin only what matters
-- `php/phpunit-template.md` or `php/pest-template.md` - base class choice, structure
+- **One** template, for the runner the target directory uses: `php/phpunit-template.md` (PHPUnit classes) or `php/pest-template.md` (Pest). Not both.
 - `php/mocking.md` - stubs vs mocks, capturing arguments, what not to mock
 - `php/determinism.md` - time, UUIDs, randomness, Faker
 - `php/json-and-payloads.md` - literal payloads, response assertions

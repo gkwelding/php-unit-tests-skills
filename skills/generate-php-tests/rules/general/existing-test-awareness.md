@@ -1,6 +1,5 @@
 ---
 title: Existing Test Awareness
-impact: HIGH
 tags: tests, duplicates, conventions, style
 ---
 

@@ -1,6 +1,5 @@
 ---
 title: Messenger, Console, Event Subscribers, Voters, HttpClient
-impact: HIGH
 tags: symfony, messenger, console, events, voters, http-client
 ---
 

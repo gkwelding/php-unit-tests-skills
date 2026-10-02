@@ -1,6 +1,5 @@
 ---
 title: JSON and Request Payloads
-impact: HIGH
 tags: php, json, payloads, serialisation
 ---
 

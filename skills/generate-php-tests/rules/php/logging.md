@@ -1,6 +1,5 @@
 ---
 title: Log Verification
-impact: MEDIUM
 tags: php, logging, psr-3, monolog
 ---
 

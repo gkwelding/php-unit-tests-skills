@@ -1,6 +1,5 @@
 ---
 title: Test Case Generation Strategy
-impact: HIGH
 tags: tests, test-cases, strategy, coverage, branches
 ---
 

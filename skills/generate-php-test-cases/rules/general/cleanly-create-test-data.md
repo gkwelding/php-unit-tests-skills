@@ -1,6 +1,5 @@
 ---
 title: Cleanly Create Test Data
-impact: HIGH
 tags: tests, test-data, helpers, factories, builders
 ---
 

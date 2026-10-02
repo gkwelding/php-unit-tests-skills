@@ -1,6 +1,5 @@
 ---
 title: Pest Test Template
-impact: HIGH
 tags: php, pest, template, structure
 ---
 
@@ -17,7 +16,7 @@ pest()->extend(Tests\TestCase::class)->in('Feature');   // Pest 3
 uses(Tests\TestCase::class)->in('Feature');             // Pest 1/2
 ```
 
-Read it. A file in `tests/Unit` may not get the Laravel app, and the same facade trap as PHPUnit applies. Don't add `uses()` to a single file unless neighbours do.
+Read it. A file in `tests/Unit` may not get the Laravel app: if the SUT calls a facade or a container-backed helper (`now()`, `config()`, `app()`, `route()`, `__()`), it fails with "A facade root has not been set". Put the test in a directory bound to `Tests\TestCase`, or note that the collaborator should be injected. Equally, don't bind a framework base class to code that doesn't need one. Don't add `uses()` to a single file unless neighbours do.
 
 ### Template
 
@@ -64,7 +63,7 @@ describe('calculate', function () {
 
 ### Datasets
 
-Use named datasets for boundary sets of one rule (see `general/keep-tests-focused.md`):
+Use named datasets for boundary sets of one rule (see `general/principles.md`):
 
 ```php
 it('rejects an invalid username', function (string $username) {
@@ -77,7 +76,7 @@ it('rejects an invalid username', function (string $username) {
 
 ### Hooks
 
-`beforeEach()` is `setUp()` with the same limits (`general/keep-cause-effect-clear.md`). Avoid `$this->user = ...` in `beforeEach` when tests assert on that user.
+`beforeEach()` is `setUp()` with the same limits (`general/principles.md`). Avoid `$this->user = ...` in `beforeEach` when tests assert on that user.
 
 ### Don't
 

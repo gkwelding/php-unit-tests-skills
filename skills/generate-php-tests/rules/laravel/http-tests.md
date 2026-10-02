@@ -1,6 +1,5 @@
 ---
 title: Laravel HTTP (Controller) Tests
-impact: HIGH
 tags: laravel, http, controllers, feature-tests, validation, auth
 ---
 
@@ -77,7 +76,7 @@ For Sanctum API routes, authenticate with `Sanctum::actingAs($user, ['orders:rea
 
 ### Validation
 
-One failing rule per test, everything else valid (`general/keep-tests-focused.md`). A base valid payload helper plus one override keeps this short:
+One failing rule per test, everything else valid (`general/principles.md`). A base valid payload helper plus one override keeps this short:
 
 ```php
 public function test_store_blank_email_returns_422(): void
@@ -129,7 +128,7 @@ $response->assertRedirect("/orders/{$order->id}");
 $response->assertSessionHas('status', 'Order placed');
 ```
 
-Use a literal path, not `route('orders.show', $order)` in the expected value (`general/no-logic-in-tests.md`). When the ID is generated during the request, fetch the created record first and build the path from its ID.
+Use a literal path, not `route('orders.show', $order)` in the expected value (`general/principles.md`). When the ID is generated during the request, fetch the created record first and build the path from its ID.
 
 ### Replacing Collaborators
 
