@@ -23,6 +23,7 @@ echo "framework,target,variant,tests,failures,errors,skipped,msi" > "$csv"
 # framework|target|comma-separated files Infection mutates
 targets=(
     "laravel|app/Services/DiscountCalculator.php|app/Services/DiscountCalculator.php"
+    "laravel|app/Actions/ShipOrder.php|app/Actions/ShipOrder.php"
     "laravel|app/Http/Controllers/CustomerController.php|app/Http/Controllers/CustomerController.php,app/Http/Requests/StoreCustomerRequest.php"
     "symfony|src/Service/ShippingCostCalculator.php|src/Service/ShippingCostCalculator.php"
     "symfony|src/Controller/OrderController.php|src/Controller/OrderController.php,src/Dto/CreateOrderDto.php"
@@ -59,7 +60,9 @@ scaffold() {
     cp -r "$root/evals/fixtures/$fw/." "$dir/"
     # PublicVisibility is off: it says nothing about test quality, and coverage never marks a
     # controller action's signature line, so it would count as surviving for every variant.
-    printf '{"source": {"directories": ["%s"]}, "testFramework": "phpunit", "mutators": {"@default": true, "PublicVisibility": false}}\n' \
+    # ArrayItemRemoval removes each item in turn (default: only the first), so a payload or rules
+    # array has one mutant per entry.
+    printf '{"source": {"directories": ["%s"]}, "testFramework": "phpunit", "mutators": {"@default": true, "PublicVisibility": false, "ArrayItemRemoval": {"settings": {"remove": "all"}}}}\n' \
         "$src" > "$dir/infection.json5"
     (cd "$dir" && git add -A 2>/dev/null \
         && { git diff --cached --quiet || git -c user.name=eval -c user.email=eval@localhost commit -qm baseline; })
