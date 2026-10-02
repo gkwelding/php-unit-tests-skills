@@ -69,7 +69,9 @@ MODEL=claude-sonnet-5-5 BUDGET_USD=3 evals/run.sh symfony
 COVERAGE_PHP_OPTS="-d zend_extension=C:/Users/<you>/.config/herd/bin/xdebug/xdebug-8.5.dll" evals/run.sh
 ```
 
-On Windows, run it from Git Bash. The script works around Git Bash's path conversion (which would turn `/generate-php-tests` into a file path) and Herd's `auto_prepend_file`, which Infection refuses to run with.
+On Windows, run it from Git Bash. The script passes prompts to `claude -p` on stdin, because Git Bash would turn a `/generate-php-tests` argument into a file path, and it clears Herd's `auto_prepend_file`, which Infection refuses to run with.
+
+Every `claude -p` call runs with `--setting-sources project`, so your user-level plugins, hooks and settings don't load in either variant. Without it, anything your own setup injects (a plugin's session-start instructions, say) applies to both variants and skews the comparison.
 
 Current `laravel/laravel` skeletons ship a `CLAUDE.md`/`AGENTS.md` for Laravel Boost. It applies to both variants equally; leave it, or delete it in `evals/.work/laravel` and recommit the baseline if you want the skills measured on their own.
 

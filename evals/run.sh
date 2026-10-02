@@ -85,8 +85,10 @@ run_one() {
     fi
 
     echo "== $name"
-    # MSYS_NO_PATHCONV stops Git Bash on Windows rewriting "/generate-php-tests" into a file path.
-    (cd "$dir" && MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*' claude -p "$prompt" ${MODEL:+--model "$MODEL"} \
+    # The prompt goes in on stdin: as an argument, Git Bash on Windows rewrites "/generate-php-tests" into
+    # a file path, and MSYS_NO_PATHCONV would leak into Claude's own shell and break tools like composer.
+    # --setting-sources project keeps your user-level plugins, hooks and settings out of both variants.
+    (cd "$dir" && printf '%s' "$prompt" | claude -p ${MODEL:+--model "$MODEL"} --setting-sources project \
         --max-budget-usd "$budget" --no-session-persistence --permission-mode acceptEdits --output-format json \
         --allowedTools "Read,Write,Edit,Glob,Grep,Bash(php:*),Bash(vendor/bin/phpunit:*),Bash(vendor/bin/pest:*),Bash(vendor/bin/phpstan:*),Bash(vendor/bin/pint:*),Bash(vendor/bin/php-cs-fixer:*),Bash(bin/phpunit:*),Bash(bin/console:*),Bash(composer dump-autoload:*),Bash(git diff:*),Bash(git status:*)" \
         > "$out.claude.json" 2> "$out.claude.err") || echo "   claude exited non-zero, see $results/$name.claude.err"
