@@ -22,6 +22,7 @@ Scoring choices, so the number measures whether tests catch bugs rather than how
 
 - `#[CoversClass]`, `#[CoversMethod]`, `#[CoversNothing]` and `@covers` are stripped from the generated tests in the scratch app before scoring (the saved diff keeps them). They narrow which code PHPUnit credits a test with, so a controller test tagged `#[CoversClass(OrderController::class)]` would leave the DTO it validates scored as uncovered.
 - The `PublicVisibility` mutator is off. It says nothing about test quality, and coverage never marks a controller action's signature line.
+- Scoring runs with `PAO_DISABLE=1`. Laravel 13 skeletons ship `laravel/pao`, which switches PHPUnit to JSON output whenever it detects an AI agent (`CLAUDECODE`, `AI_AGENT` and others, so any run started from Claude Code). Infection can't parse that output, reads every mutant run as a failure and scores every covered mutant as killed. `claude -p` itself still runs with pao, as it would in a real Laravel 13 project.
 - Infection's own initial test run is skipped (`--skip-initial-tests` with the coverage from the run above). Inside Infection it exited part-way through Symfony `WebTestCase` suites that pass when PHPUnit is run directly.
 
 ## Targets

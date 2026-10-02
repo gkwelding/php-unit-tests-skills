@@ -97,9 +97,13 @@ run_one() {
     # is skipped: inside Infection it exits part-way through Symfony WebTestCase suites that pass
     # when PHPUnit is run directly. auto_prepend_file is cleared because Infection rejects it
     # (Laravel Herd sets one).
+    #
+    # PAO_DISABLE=1 turns off laravel/pao, which Laravel 13 skeletons ship: when it detects an AI agent
+    # (CLAUDECODE, AI_AGENT, ...) it switches PHPUnit to JSON output, which Infection can't parse, so
+    # every mutant run reads as a failure and every mutant as killed. claude -p above still gets pao.
     local cov=$out.coverage junit=$out.coverage/junit.xml
     # shellcheck disable=SC2086 # COVERAGE_PHP_OPTS is a list of php options
-    (cd "$dir" && php -d auto_prepend_file= ${COVERAGE_PHP_OPTS:-} vendor/bin/phpunit \
+    (cd "$dir" && PAO_DISABLE=1 php -d auto_prepend_file= ${COVERAGE_PHP_OPTS:-} vendor/bin/phpunit \
         --coverage-xml="$cov/coverage-xml" --log-junit="$junit" > "$out.phpunit.txt" 2>&1) || true
 
     # Mutation scores only mean something against a green suite: a failing test "kills" every
@@ -111,7 +115,7 @@ run_one() {
             exit($x && (int) $x->testsuite["failures"] + (int) $x->testsuite["errors"] === 0 ? 0 : 1);
         ' "$junit"); then
         # --with-uncovered counts target code no test reaches as surviving mutants.
-        (cd "$dir" && php -d auto_prepend_file= vendor/bin/infection --threads=max --no-progress --with-uncovered \
+        (cd "$dir" && PAO_DISABLE=1 php -d auto_prepend_file= vendor/bin/infection --threads=max --no-progress --with-uncovered \
             --coverage="$cov" --skip-initial-tests \
             --logger-summary-json="$out.infection.json" "${files[@]}" > "$out.infection.txt" 2>&1) || true
     fi
