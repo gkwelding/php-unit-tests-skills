@@ -6,6 +6,7 @@
 # Env:   MODEL       model for claude -p (default: your claude default)
 #        BUDGET_USD  spend cap per claude run (default 5)
 #        WORK        scratch directory for the scaffolded apps (default evals/.work)
+#        JUDGE       0 skips the blind side-by-side review at the end (evals/judge.sh)
 #        COVERAGE_PHP_OPTS  php options that load a coverage driver for the coverage run,
 #                    e.g. "-d zend_extension=/path/to/xdebug.dll" when it isn't enabled in php.ini (no spaces in the path)
 set -euo pipefail
@@ -155,3 +156,6 @@ echo
 column -s, -t < "$csv" 2>/dev/null || cat "$csv"
 echo
 echo "Logs, diffs and results.csv: $results"
+
+# Blind side-by-side review of each target's two suites (one extra claude -p call per target).
+[ "${JUDGE:-1}" = 0 ] || bash "$root/evals/judge.sh" "$results"

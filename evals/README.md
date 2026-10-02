@@ -1,6 +1,6 @@
 # Evals
 
-Checks whether the skills produce better tests than a plain prompt, and which rule changes help or hurt.
+Checks whether the skills produce better-written tests than a plain prompt (simpler, more readable, more focused) that are at least as good at catching bugs, and which rule changes help or hurt. Mutation score is the floor; the shape metrics and the blind review below are the main signal.
 
 For each target, `run.sh` scaffolds a fresh Laravel or Symfony app, adds the fixture code, and asks `claude -p` to write tests twice:
 
@@ -20,6 +20,20 @@ It then runs the whole suite once with coverage, runs Infection on the target's 
 | `msi` | Infection's mutation score for the target's files, counting code no test reaches as surviving (`--with-uncovered`). Blank if the suite has failures or errors (a failing test would "kill" every mutant), the suite executed no app code at all, or no coverage driver is loaded |
 
 Higher MSI with no failures and few skips is better. A skipped test with a reason may still be a correct finding; read the log before counting it against the run.
+
+## Blind review
+
+At the end of a run, `judge.sh` asks one tool-less `claude -p` per target to compare the two suites. It sees the code under test (with the app classes it imports) and the test code each variant added, labelled A and B in random order, and picks A, B or tie for:
+
+| Criterion | Question |
+|---|---|
+| `readability` | Easier to understand at a glance: names say scenario and outcome; setup, action and check are easy to tell apart |
+| `simplicity` | Less noise: only the setup each test needs, no logic or helpers hiding what is tested |
+| `focus` | Each test checks one behaviour, so a failure points at its cause |
+| `effectiveness` | More likely to catch a real regression, without breaking on harmless refactors |
+| `overall` | The suite you would rather maintain |
+
+Verdicts, mapped back to `with` / `without`, go to `judge.csv` with a one-sentence reason each, and a tally is printed. `JUDGE=0 evals/run.sh` skips it; `evals/judge.sh evals/.work/results/<timestamp>` re-judges a saved run (`JUDGE_BUDGET_USD`, default 1, caps each comparison).
 
 Scoring choices, so the number measures whether tests catch bugs rather than how they are labelled:
 
@@ -61,6 +75,6 @@ Current `laravel/laravel` skeletons ship a `CLAUDE.md`/`AGENTS.md` for Laravel B
 
 The first run scaffolds the apps into `evals/.work/` (gitignored) and reuses them afterwards. Fixture edits are copied in on every run; delete a framework's folder to rebuild it after changing its packages or to pick up newer framework releases. Each run writes `results.csv` plus per-target logs and diffs to `evals/.work/results/<timestamp>/`.
 
-**Cost:** 10 `claude -p` runs for `all`, each capped by `BUDGET_USD` (default 5). Claude can only edit files and run `php`, the test, lint and static-analysis binaries in `vendor/bin`, `bin/console`, `composer dump-autoload` and read-only `git` in the scratch app.
+**Cost:** 10 `claude -p` runs for `all`, each capped by `BUDGET_USD` (default 5), plus 5 judge calls capped by `JUDGE_BUDGET_USD` (default 1). Claude can only edit files and run `php`, the test, lint and static-analysis binaries in `vendor/bin`, `bin/console`, `composer dump-autoload` and read-only `git` in the scratch app.
 
 **Noise:** results vary between runs. Run each variant a few times before trusting a difference, and compare like with like (same model, same framework versions).

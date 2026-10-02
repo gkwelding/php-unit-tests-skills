@@ -2,11 +2,16 @@
 
 // Static quality metrics for the test code a run added, read from its saved diff.
 // Usage: php evals/metrics.php <run>.diff
-// Prints one CSV fragment: test_methods,test_loc,loc_per_test,asserts_per_test,logic,loose_asserts,doubles
+//        Prints one CSV fragment: test_methods,test_loc,loc_per_test,asserts_per_test,logic,loose_asserts,doubles
+//        php evals/metrics.php --code <run>.diff
+//        Prints the added test code itself, one "// <path>" header per file (used by judge.sh).
+
+$codeOnly = ($argv[1] ?? '') === '--code';
+$diffPath = $codeOnly ? ($argv[2] ?? '') : ($argv[1] ?? '');
 
 $files = [];
 $current = null;
-foreach (preg_split('/\R/', (string) @file_get_contents($argv[1] ?? '')) as $line) {
+foreach (preg_split('/\R/', (string) @file_get_contents($diffPath)) as $line) {
     if (str_starts_with($line, '+++ ')) {
         $current = preg_match('#^\+\+\+ b/(tests/.+\.php)$#', $line, $m) ? $m[1] : null;
         continue;
@@ -14,6 +19,13 @@ foreach (preg_split('/\R/', (string) @file_get_contents($argv[1] ?? '')) as $lin
     if ($current !== null && str_starts_with($line, '+')) {
         $files[$current] = ($files[$current] ?? '').substr($line, 1)."\n";
     }
+}
+
+if ($codeOnly) {
+    foreach ($files as $path => $code) {
+        echo "// {$path}\n{$code}\n";
+    }
+    exit;
 }
 
 $methods = $loc = $asserts = $logic = $loose = $doubles = 0;
