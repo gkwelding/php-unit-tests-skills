@@ -108,7 +108,14 @@ diff -r skills/generate-php-test-cases/rules/general skills/generate-php-tests/r
 
 ## Status
 
-First version. The rules have been checked against the Laravel 12, Symfony 7.3/8.1, PHPUnit 12.5, Mockery 1.6 and Monolog 3 sources for the APIs they name. [`evals/`](evals/README.md) compares tests written with and without the skills (pass rate, skips, Infection mutation score) on Laravel and Symfony fixtures; no published results yet. Treat it as a strong starting point and adjust the rules to your own house style.
+Early version. The rules have been checked against the Laravel 12, Symfony 7.3/8.1, PHPUnit 12.5, Mockery 1.6 and Monolog 3 sources for the APIs they name. Treat it as a strong starting point and adjust the rules to your own house style.
+
+[`evals/`](evals/README.md) compares tests written with and without the skills on six Laravel and Symfony fixtures: mutation score, the shape of the tests (lines and assertions per test, logic, loose assertions, doubles) and a blind side-by-side review. First results, one sample per variant with the default model:
+
+- **Catching bugs:** both variants reach 100% mutation score on most targets. The clearest gap is validation: on `CustomerController` the skill's tests kill every mutant while the baseline misses removed `required`/`string` rules, because it asserts only which field failed.
+- **Shape:** the skill writes more, smaller tests (7-12 lines and 1-2 assertions each, against 10-24 lines and up to 5 for the baseline). Neither used logic in tests, loose assertions or test doubles.
+- **Blind review (5 comparisons):** the skill's suites won readability 5-0 and focus 5-0, but lost simplicity 1-4: on small calculators the reviewer preferred compact data providers to the skill's many near-identical methods with Given/When/Then comments. Effectiveness split 2-3, overall 3-2.
+- **Cost:** on the Laravel runs, the skill cost about 1.7-2.6x more per target.
 
 ## Licence
 
